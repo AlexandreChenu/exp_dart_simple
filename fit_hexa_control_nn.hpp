@@ -80,13 +80,11 @@ public:
     //std::cout << "fitness : " << res[0] << std::endl;
 
     // descriptor is the final position of the robot. 
-    std::vector<double> desc(5);
+    std::vector<double> desc(3);
  
     desc[0] = res[1];
     desc[1] = res[2];
     desc[2] = res[3];
-    desc[3] = targ[0];
-    desc[4] = targ[1];
 
     this->set_desc(desc); //save behavior descriptor
 
