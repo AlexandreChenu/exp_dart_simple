@@ -1,7 +1,7 @@
 #!/bin/bash
 
 LOCAL_EXP_PATH=${pwd}'/..'
-IMAGENAME='exp_dart_test.simg'
+IMAGENAME='exp_dart_simple.simg'
 DEFNAME='singularity.def'
 SANDBOX=true
 
