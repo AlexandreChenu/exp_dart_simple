@@ -21,7 +21,7 @@ From: airl_lab/default/airl_env:base
    cd sferes2
    git checkout qd
    git pull
-   ./waf configure --exp example_dart_exp --dart /workspace --kdtree /workspace/include --robot_dart /workspace
+   ./waf configure --kdtree /workspace/include 
    ./waf build
    # ...
    # ...
