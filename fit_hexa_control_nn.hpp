@@ -147,8 +147,8 @@ public:
     //std::cout << "traj size: " << size << std::endl;
 
     double dist = 0;
-    std::vector<double> zone_exp(3) = {0,0,0};
-    std::vector<double> res(3) = {0,0,0};
+    std::vector<double> zone_exp(3);
+    std::vector<double> res(3);
     std::vector<double> results(4);
 	
     Eigen::VectorXf pos_init = traj[0];
