@@ -85,6 +85,9 @@ public:
     desc[0] = res[1];
     desc[1] = res[2];
     desc[2] = res[3];
+	 
+	  
+    std::cout << "behavior descriptor in evaluation: " << desc[0] << " - " << desc[1] << " - " << desc[2] << std::endl;
 
     this->set_desc(desc); //save behavior descriptor
 
@@ -180,11 +183,15 @@ public:
 
 
     int sum_zones = zone_exp[0] + zone_exp[1] + zone_exp[2];
+	  
+    std::cout << "sum results: " << sum_zones << std::endl;
 
     results[0] = dist;
     results[1] = zone_exp[0]/sum_zones;
     results[2] = zone_exp[1]/sum_zones;
     results[3] = zone_exp[2]/sum_zones;
+	  
+    std::cout << "final results: " << results[0] << " - " << results[1] << " - " << results[2] << " - " << results[3] << std::endl;
 
     return results;
   }
