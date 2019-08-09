@@ -182,7 +182,7 @@ public:
     //std::cout << "fit 2" << std::endl;
 
 
-    int sum_zones = zone_exp[0] + zone_exp[1] + zone_exp[2];
+    int sum_zones = abs(zone_exp[0]) + abs(zone_exp[1]) + abs(zone_exp[2]);
 	  
     std::cout << "sum results: " << sum_zones << std::endl;
 
