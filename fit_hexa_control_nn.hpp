@@ -33,8 +33,8 @@ namespace global{
 void load_and_init_robot()
 {
   std::cout<<"INIT Robot"<<std::endl;
-  global::global_robot = std::make_shared<robot_dart::Robot>("exp/exp_dart_simple/ressources/hexapod_v2.urdf");
-  //global::global_robot = std::make_shared<robot_dart::Robot>("exp/ressources/hexapod_v2.urdf");
+  //global::global_robot = std::make_shared<robot_dart::Robot>("exp/exp_dart_simple/ressources/hexapod_v2.urdf");
+  global::global_robot = std::make_shared<robot_dart::Robot>("exp/ressources/hexapod_v2.urdf");
   global::global_robot->set_position_enforced(true);
   //global::global_robot->set_position_enforced(true);
   //global_robot->skeleton()->setPosition(1,100* M_PI / 2.0);
@@ -87,7 +87,7 @@ public:
     desc[2] = res[3];
 	 
 	  
-    std::cout << "behavior descriptor in evaluation: " << desc[0] << " - " << desc[1] << " - " << desc[2] << std::endl;
+    //std::cout << "behavior descriptor in evaluation: " << desc[0] << " - " << desc[1] << " - " << desc[2] << std::endl;
 
     this->set_desc(desc); //save behavior descriptor
 
@@ -147,8 +147,8 @@ public:
     //std::cout << "traj size: " << size << std::endl;
 
     double dist = 0;
-    std::vector<double> zone_exp(3) = {0,0,0};
-    std::vector<double> res(3) = {0,0,0};
+    std::vector<double> zone_exp(3);
+    std::vector<double> res(3);
     std::vector<double> results(4);
 	
     Eigen::VectorXf pos_init = traj[0];
@@ -174,24 +174,24 @@ public:
     
     //std::cout << "fit 1" << std::endl;
     if (sqrt((target[0]-_traj.back()[0])*(target[0]-_traj.back()[0]) + (target[1]-_traj.back()[1])*(target[1]-_traj.back()[1])) < 0.05){
-          dist = 1.0 + dist/2000;} // -> 1 (TODO : check division by 500)
+          dist = 1.0 + dist/10000;} // -> 1 (TODO : check division by 500)
 
     else {
-          dist = dist/2000; // -> 0
+          dist = dist/10000; // -> 0
         }
     //std::cout << "fit 2" << std::endl;
 
 
-    int sum_zones = zone_exp[0] + zone_exp[1] + zone_exp[2];
+    int sum_zones = abs(zone_exp[0]) + abs(zone_exp[1]) + abs(zone_exp[2]);
 	  
-    std::cout << "sum results: " << sum_zones << std::endl;
+    //std::cout << "sum results: " << sum_zones << std::endl;
 
     results[0] = dist;
     results[1] = zone_exp[0]/sum_zones;
     results[2] = zone_exp[1]/sum_zones;
     results[3] = zone_exp[2]/sum_zones;
 	  
-    std::cout << "final results: " << results[0] << " - " << results[1] << " - " << results[2] << " - " << results[3] << std::endl;
+    //std::cout << "final results: " << results[0] << " - " << results[1] << " - " << results[2] << " - " << results[3] << std::endl;
 
     return results;
   }
