@@ -252,7 +252,7 @@ public:
       
       Eigen::Vector3d vO2_M_R1; //vector 02M in frame R1;
       //vO2_M_R1 = T*vO2_M_R0;  
-      vO2_M_R1 = R*vO2_M_R1;
+      vO2_M_R1 = R*vO2_M_R0;
 	  
       Eigen::Vector3d vMid_M_R1; //vector Middle_M in frame R1;
       vMid_M_R1 = R*vMid_M_R0;
