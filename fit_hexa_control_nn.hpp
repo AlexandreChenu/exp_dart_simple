@@ -66,7 +66,7 @@ public:
 
     //target = {targ[0], targ[1], 0.0};
 
-    target = {-0.211234, 0.59688,0.0};	
+    target = {-5.0, 5.0 ,0.0};	
    
     //std::cout << "target : " << target << std::endl;
 
