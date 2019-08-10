@@ -48,7 +48,6 @@ def build(bld):
                 use = 'sferes2',
                 target = 'test_dart')
 
-
     bld.program(features = 'cxx',
                 source = 'test_dart.cpp',
                 includes = '. ../../',
@@ -56,5 +55,18 @@ def build(bld):
                 use = 'sferes2',
                 defines = ["GRAPHIC"],
                 target = 'test_dart_graphic')
+    
+    bld.program(features = 'cxx',
+                source = 'test_model_dart.cpp',
+                includes = '. ../../',
+                uselib = 'ROBOTDART TBB BOOST EIGEN PTHREAD MPI DART ROBOT_DART',
+                use = 'sferes2',
+                target = 'test_model_dart')
 
-                            
+    bld.program(features = 'cxx',
+                source = 'test_model_dart.cpp',
+                includes = '. ../../',
+                uselib = 'ROBOTDART TBB BOOST EIGEN PTHREAD MPI DART ROBOT_DART DART_GRAPHIC',
+                use = 'sferes2',
+                defines = ["GRAPHIC"],
+                target = 'test_model_dart_graphic')
