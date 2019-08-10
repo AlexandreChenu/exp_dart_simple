@@ -135,6 +135,9 @@ public:
     g_robot.reset();
 
     _traj=std::static_pointer_cast<robot_dart::descriptor::HexaDescriptor>(simu.descriptor(0))->traj;
+
+    std::cout << "Trajectory: " << _traj << std::endl;
+
   }
 
 
