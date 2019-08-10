@@ -56,7 +56,9 @@
 #include "fit_hexa.hpp"
 
 
+using namespace sferes;
 using namespace sferes::gen::evo_float;
+using namespace sferes::gen::dnn;
 
 struct Params {
     struct nov {
