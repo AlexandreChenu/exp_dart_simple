@@ -52,9 +52,26 @@
 #include <sferes/qd/selector/tournament.hpp>
 #include <sferes/qd/selector/uniform.hpp>
 
+#include <modules/nn2/mlp.hpp>
+#include <modules/nn2/gen_dnn.hpp>
+#include <modules/nn2/phen_dnn.hpp>
+#include <modules/nn2/gen_dnn_ff.hpp>
 
-#include "fit_hexa.hpp"
+#include <boost/test/unit_test.hpp>
+#include <boost/serialization/shared_ptr.hpp>
+#include <boost/serialization/nvp.hpp>
+#include <boost/archive/binary_oarchive.hpp>
+#include <boost/archive/binary_iarchive.hpp>
 
+#include "gen_dte.hpp" 
+
+#include <cmath>
+#include <algorithm>
+
+#include <cstdlib>
+
+#include "fit_hexa_control_nn.hpp"
+#include "best_fit_nn.hpp"
 
 using namespace sferes;
 using namespace sferes::gen::evo_float;
