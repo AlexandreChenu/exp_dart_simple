@@ -170,7 +170,7 @@ int main(int argc, char **argv)
 
     phen_t model; 
 
-    Eigen::Vector3d& target = {-0.211234, 0.59688,0.0};
+    Eigen::Vector3d target = {-0.211234, 0.59688,0.0};
 
     const std::string filename = "model_4900.bin";
     std::cout << "model...loading" << std::endl;
@@ -185,7 +185,7 @@ int main(int argc, char **argv)
     std::cout << "model developed" << std::endl;
     std::cout << "model initialized" << std::endl;
 
-	visualise_behaviour<fit_t>(model);
+	visualise_behaviour<fit_t>(target, model);
 
 	global::global_robot.reset();
 
