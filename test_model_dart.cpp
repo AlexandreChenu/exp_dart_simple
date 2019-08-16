@@ -136,9 +136,9 @@ int main(int argc, char **argv)
 
     phen_t model; 
 
-    Eigen::Vector3d& target = {-0.211234, 0.59688,0.0};
-
-    const std::string filename = "model_4900.bin";
+    //Eigen::Vector3d target = {-0.211234, 0.59688,0.0};
+    Eigen::Vector3d target = {-5.0, 5.0 ,0.0}
+    const std::string filename = "model_6400.bin";
     std::cout << "model...loading" << std::endl;
         {
         std::ifstream ifs(filename , std::ios::binary);
