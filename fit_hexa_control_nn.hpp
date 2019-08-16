@@ -66,7 +66,7 @@ public:
 
     //target = {targ[0], targ[1], 0.0};
 
-    target = {-0.211234, 0.59688,0.0};	
+    target = {-5.0, 5.0 ,0.0};	
    
     //std::cout << "target : " << target << std::endl;
 
@@ -136,7 +136,7 @@ public:
 
     _traj=std::static_pointer_cast<robot_dart::descriptor::HexaDescriptor>(simu.descriptor(0))->traj;
 
-    std::cout << "Trajectory: " << _traj << std::endl;
+    //std::cout << "Trajectory: " << _traj << std::endl;
 
   }
 
