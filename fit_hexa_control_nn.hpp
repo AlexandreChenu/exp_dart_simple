@@ -66,7 +66,7 @@ public:
 
     //target = {targ[0], targ[1], 0.0};
 
-    target = {-0.211234, 0.59688,0.0};	
+    target = {-5.0, 5.0 ,0.0};	
    
     //std::cout << "target : " << target << std::endl;
 
@@ -164,7 +164,7 @@ public:
     for (int i = 0; i < size; i++)
       {	
 
-	std::cout << "traj " << i << " : " << _traj[i][0] << " - " << _traj[i][1] << std::endl;
+	//std::cout << "traj " << i << " : " << _traj[i][0] << " - " << _traj[i][1] << std::endl;
         //std::cout << "fit" << std::endl;
         if (sqrt((target[0]-_traj[i][0])*(target[0]-_traj[i][0]) + (target[1]-_traj[i][1])*(target[1]-_traj[i][1])) < 0.02){
           dist -= sqrt((target[0]-_traj[i][0])*(target[0]-_traj[i][0]) + (target[1]-_traj[i][1])*(target[1]-_traj[i][1]));}

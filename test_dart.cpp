@@ -86,7 +86,7 @@ struct Params {
         SFERES_CONST size_t init_size = 1000;
         // size of a batch
         SFERES_CONST size_t size = 200;
-        SFERES_CONST size_t nb_gen = 5000;
+        SFERES_CONST size_t nb_gen = 25000;
         SFERES_CONST size_t dump_period = 100;
     };
 
@@ -145,7 +145,7 @@ struct Params {
 
 int main(int argc, char **argv) 
 {   
-    tbb::task_scheduler_init init(48);
+    tbb::task_scheduler_init init(32);
 
     load_and_init_robot();
 
