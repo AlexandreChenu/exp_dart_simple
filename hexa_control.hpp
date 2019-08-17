@@ -88,10 +88,12 @@ namespace robot_dart {
                 inputs[1] = pos[1] - _target[1];
 		
                 Eigen::VectorXd prev_commands_full = robot->skeleton()->getCommands(); //get previous command -> TODO : check, it should be of size 24
-                Eigen::VectorXd prev_joint_full = robot->skeleton()-> //how to get the joint angle? 
+                //Eigen::VectorXd prev_joint_full = robot->skeleton()-> //how to get the joint angle? 
 		
 		
-//                std::cout << "test local - size de la précédente commande : " << prev_commands_full.size() << std::endl;
+                std::cout << "\ntest local - size de get commands : " << prev_commands_full.size() << std::endl;
+		std::cout << "\ntest local - size de get positions : " << robot->skeleton()->getPositions().size() << std::endl;
+		std::cout << "\ntest local - get positions : " << robot->skeleton()->getPositions() << std::endl;
                 
                 std::vector<double> prev_commands;
                 for (int i = 1; i < 19; i++){ 
@@ -100,6 +102,7 @@ namespace robot_dart {
                 }
 		  
 		 std::cout << "prev_commands size: " << prev_commands.size() << std::endl;
+		 std::cout << "prev commands: " << prev_commands << std::endl;
 //                std::cout << "test unitaire - size de la commande récupérée (= 12?) : " << prev_commands.size() << std::endl;
 
                 for (int i = 0; i < n_Dof ; i++){
