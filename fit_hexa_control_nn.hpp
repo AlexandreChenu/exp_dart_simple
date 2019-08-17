@@ -66,7 +66,7 @@ public:
 
     //target = {targ[0], targ[1], 0.0};
 
-    target = {-5.0, 5.0 ,0.0};	
+    target = {-1.0, 1.0 ,0.0};	
    
     //std::cout << "target : " << target << std::endl;
 
@@ -121,7 +121,7 @@ public:
     robot_dart::RobotDARTSimu simu(0.005); //creation d'une simulation
 
 #ifdef GRAPHIC
-    simu.set_graphics(std::make_shared<robot_dart::graphics::Graphics>(simu.world()));
+    simu.set_graphics(std::make_shared<robot_dart::graphics::Graphics>(simu.world(), 640, 480, false));
 #endif
 
     simu.world()->getConstraintSolver()->setCollisionDetector(dart::collision::BulletCollisionDetector::create());
