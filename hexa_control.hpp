@@ -91,8 +91,8 @@ namespace robot_dart {
                 //Eigen::VectorXd prev_joint_full = robot->skeleton()-> //how to get the joint angle?
 		Eigen::VectorXd prev_commands_full = robot->skeleton()->getPositions();
 		
-                std::cout << "\ntest local - size de get commands : " << prev_commands_full.size() << std::endl;
-		std::cout << "\ntest local - size de get positions : " << robot->skeleton()->getPositions().size() << std::endl;
+                //std::cout << "\ntest local - size de get commands : " << prev_commands_full.size() << std::endl;
+		//std::cout << "\ntest local - size de get positions : " << robot->skeleton()->getPositions().size() << std::endl;
 		//std::cout << "\ntest local - get positions : " << robot->skeleton()->getPositions() << std::endl;
                 
                 std::vector<double> prev_commands;
@@ -101,10 +101,10 @@ namespace robot_dart {
                         prev_commands.push_back(prev_commands_full[5 + i]);} //we don't consider dof 3 TODO : check order of commands 
                 }
 		  
-		 std::cout << "prev_commands size: " << prev_commands.size() << std::endl;
+		 //std::cout << "prev_commands size: " << prev_commands.size() << std::endl;
 		 
-		for (int i = 0; i<prev_commands.size(); i++)
-		 std::cout << "prev commands "<< i << ": " << prev_commands[i] << std::endl;
+		//for (int i = 0; i<prev_commands.size(); i++)
+		 //std::cout << "prev commands "<< i << ": " << prev_commands[i] << std::endl;
 //                std::cout << "test unitaire - size de la commande récupérée (= 12?) : " << prev_commands.size() << std::endl;
 
                 for (int i = 0; i < n_Dof ; i++){
@@ -116,7 +116,7 @@ namespace robot_dart {
 
                 for (int i = 0; i < 3 ; i++){
                     inputs[2 + n_Dof + i] = angles[i]; // yaw / pitch / roll
-		    std::cout << "input "<< i << ": "<<inputs[i] << std::endl;
+		    //std::cout << "input "<< i << ": "<<inputs[i] << std::endl;
                 }
 
                 _model.gen().init();
@@ -140,7 +140,7 @@ namespace robot_dart {
                         }
                     }
 
-                std::cout << "test unitaire - size de la commande en sortie format std vector(=18?) : " << commands_out.size() << std::endl;
+                //std::cout << "test unitaire - size de la commande en sortie format std vector(=18?) : " << commands_out.size() << std::endl;
 		
                 //Eigen::VectorXd commands(commands_out.data());
                 //std::cout << "test unitaire - size de la commande en sortie format eigen vector (=18?) : " << commands.size() << std::endl;
