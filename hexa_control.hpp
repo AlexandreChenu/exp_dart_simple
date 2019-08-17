@@ -30,8 +30,6 @@ namespace robot_dart {
                 }
                 //auto angles = _controller.pos(t);
                 auto angles = get_angles(robot);
-		
-		std::cout << "size of angles output: " << std::endl;
 
                 //Eigen::VectorXd target_positions = Eigen::VectorXd::Zero(18 + 6);
                 //for (size_t i = 0; i < angles.size(); i++)
