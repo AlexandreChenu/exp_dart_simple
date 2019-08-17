@@ -33,7 +33,7 @@ namespace robot_dart {
 		
 		std::cout << "size of angles output: " << std::endl;
 
-                Eigen::VectorXd target_positions = Eigen::VectorXd::Zero(18 + 6);
+                //Eigen::VectorXd target_positions = Eigen::VectorXd::Zero(18 + 6);
                 //for (size_t i = 0; i < angles.size(); i++)
                     //target_positions(i + 6) = ((i % 3 == 1) ? 1.0 : -1.0) * angles[i];
 		Eigen::VectorXd target_positions = Eigen::VectorXd::Zero(18 + 6);
@@ -102,7 +102,9 @@ namespace robot_dart {
                 }
 		  
 		 std::cout << "prev_commands size: " << prev_commands.size() << std::endl;
-		 std::cout << "prev commands: " << prev_commands << std::endl;
+		 
+		for (int i = 0; i<prev_commands.size(); i++)
+		 std::cout << "prev commands "<< i << ": " << prev_commands[i] << std::endl;
 //                std::cout << "test unitaire - size de la commande récupérée (= 12?) : " << prev_commands.size() << std::endl;
 
                 for (int i = 0; i < n_Dof ; i++){
