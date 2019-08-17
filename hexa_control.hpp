@@ -38,7 +38,7 @@ namespace robot_dart {
                     //target_positions(i + 6) = ((i % 3 == 1) ? 1.0 : -1.0) * angles[i];
 		Eigen::VectorXd target_positions = Eigen::VectorXd::Zero(18 + 6);
 		for (size_t i = 0; i < angles.size(); i++)
-			target_positions(i) = angles(i);
+			target_positions(i+6) = angles[i];
 
                 Eigen::VectorXd q = robot->skeleton()->getPositions();
                 Eigen::VectorXd q_err = target_positions - q;
