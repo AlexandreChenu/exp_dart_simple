@@ -87,13 +87,13 @@ namespace robot_dart {
 		inputs[0] = pos[0] - _target[0]; //inputs is gradient of position
                 inputs[1] = pos[1] - _target[1];
 		
-                Eigen::VectorXd prev_commands_full = robot->skeleton()->getCommands(); //get previous command -> TODO : check, it should be of size 24
-                //Eigen::VectorXd prev_joint_full = robot->skeleton()-> //how to get the joint angle? 
-		
+                //Eigen::VectorXd prev_commands_full = robot->skeleton()->getCommands(); //get previous command -> TODO : check, it should be of size 24
+                //Eigen::VectorXd prev_joint_full = robot->skeleton()-> //how to get the joint angle?
+		Eigen::VectorXd prev_commands_full = robot->skeleton()->getPositions();
 		
                 std::cout << "\ntest local - size de get commands : " << prev_commands_full.size() << std::endl;
 		std::cout << "\ntest local - size de get positions : " << robot->skeleton()->getPositions().size() << std::endl;
-		std::cout << "\ntest local - get positions : " << robot->skeleton()->getPositions() << std::endl;
+		//std::cout << "\ntest local - get positions : " << robot->skeleton()->getPositions() << std::endl;
                 
                 std::vector<double> prev_commands;
                 for (int i = 1; i < 19; i++){ 
@@ -116,6 +116,7 @@ namespace robot_dart {
 
                 for (int i = 0; i < 3 ; i++){
                     inputs[2 + n_Dof + i] = angles[i]; // yaw / pitch / roll
+		    std::cout << "input "<< i << ": "<<inputs[i] << std::endl;
                 }
 
                 _model.gen().init();
@@ -140,9 +141,8 @@ namespace robot_dart {
                     }
 
                 std::cout << "test unitaire - size de la commande en sortie format std vector(=18?) : " << commands_out.size() << std::endl;
-
+		
                 //Eigen::VectorXd commands(commands_out.data());
-
                 //std::cout << "test unitaire - size de la commande en sortie format eigen vector (=18?) : " << commands.size() << std::endl;
                 
                 return commands_out;}
