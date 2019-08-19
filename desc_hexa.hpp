@@ -32,7 +32,7 @@ namespace robot_dart {
 
 	virtual void operator()()
 	{
-	  const dart::collision::CollisionResult& col_res = _simu.world()->getLastCollisionResult();
+	const dart::collision::CollisionResult& col_res = _simu.world()->getLastCollisionResult();
 	  //const std::unordered_set< const dart::dynamics::BodyNode * > colliding_nodes = col_res.getCollidingBodyNodes ();
 	  //const std::unordered_set< const dart::dynamics::ShapeFrame * > colliding_frames = col_res.getCollidingShapeFrames ();	  
 	  

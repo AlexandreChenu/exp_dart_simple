@@ -83,9 +83,9 @@ struct Params {
     // TODO: move to a qd::
     struct pop {
         // number of initial random points
-        SFERES_CONST size_t init_size = 1000;
+        SFERES_CONST size_t init_size = 100;
         // size of a batch
-        SFERES_CONST size_t size = 200;
+        SFERES_CONST size_t size = 100;
         SFERES_CONST size_t nb_gen = 10000;
         SFERES_CONST size_t dump_period = 500;
     };
@@ -145,7 +145,7 @@ struct Params {
 
 int main(int argc, char **argv) 
 {   
-    tbb::task_scheduler_init init(10);
+    tbb::task_scheduler_init init(32);
 
     load_and_init_robot();
 
@@ -170,13 +170,13 @@ int main(int argc, char **argv)
     typedef qd::container::SortBasedStorage< boost::shared_ptr<phen_t> > storage_t; 
     typedef qd::container::Archive<phen_t, storage_t, Params> container_t; 
 
-#ifdef GRAPHIC
-    typedef eval::Eval<Params> eval_t;
-#else
-    typedef eval::Parallel<Params> eval_t;
-#endif
-    
+//#ifdef GRAPHIC
 //    typedef eval::Eval<Params> eval_t;
+//#else
+//    typedef eval::Parallel<Params> eval_t;
+//#endif
+    
+    typedef eval::Parallel<Params> eval_t;
 
     typedef boost::fusion::vector<
         stat::BestFitNN<phen_t, Params>, 
