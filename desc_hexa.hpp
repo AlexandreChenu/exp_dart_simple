@@ -23,7 +23,54 @@ namespace robot_dart {
 	  //if( traj.back()[0] > 1 || traj.back()[1] > 1 || traj.back()[0] < -1 || traj.back()[1] < -1 )
 	  //std::cout<<"ERROR "<<traj.back().transpose()<<std::endl;
 	}
-      };
+      }; //struct HexaDescriptor
+
+     struct DutyCycle:public BaseDescriptor{
+      public:
+	DutyCycle(RobotDARTSimu& simu, size_t desc_dump = 1):BaseDescriptor(simu,desc_dump),_body_contact(false)
+	{}
+
+	virtual void operator()()
+	{
+	  const dart::collision::CollisionResult& col_res = _simu.world()->getLastCollisionResult();
+	  //const std::unordered_set< const dart::dynamics::BodyNode * > colliding_nodes = col_res.getCollidingBodyNodes ();
+	  //const std::unordered_set< const dart::dynamics::ShapeFrame * > colliding_frames = col_res.getCollidingShapeFrames ();	  
+	  
+ 	
+	//std::cout << "nodes : " << std::endl;
+
+	//  for (const auto& elem: colliding_nodes) {
+    	//	std::cout << elem->getName() << std::endl;
+	//	}
+	//std::cout << "shapes : " << std::endl;
+
+        //  for (const auto& elem: colliding_frames) {
+	//	std::cout << elem->getName() << std::endl;}	  
+
+	  _body_contact = false;
+ 
+   	  dart::dynamics::BodyNodePtr part_to_check = _simu.robots().back()->skeleton()->getBodyNode("base_link");
+
+	  if(col_res.inCollision(part_to_check)){
+             _body_contact=true;
+	      }
+		
+	  //if (_body_contact){
+	  //	std::cout << "collision" << std::endl;}
+
+	  //else {
+	//	std::cout << "no collision" << std::endl;}
+	  
+	} //void operator
+
+	bool body_contact(){return _body_contact;}
+
+      protected:
+	bool _body_contact;
+	
+      };//struct dutycycle
+
+
     } // namespace descriptor
 } // namespace robot_dart
 

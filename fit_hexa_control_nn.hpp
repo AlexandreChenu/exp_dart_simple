@@ -33,8 +33,8 @@ namespace global{
 void load_and_init_robot()
 {
   std::cout<<"INIT Robot"<<std::endl;
-  global::global_robot = std::make_shared<robot_dart::Robot>("exp/exp_dart_simple/ressources/hexapod_v2.urdf");
-  //global::global_robot = std::make_shared<robot_dart::Robot>("exp/ressources/hexapod_v2.urdf");
+  //global::global_robot = std::make_shared<robot_dart::Robot>("exp/exp_dart_simple/ressources/hexapod_v2.urdf");
+  global::global_robot = std::make_shared<robot_dart::Robot>("exp/ressources/hexapod_v2.urdf");
   global::global_robot->set_position_enforced(true);
   //global::global_robot->set_position_enforced(true);
   //global_robot->skeleton()->setPosition(1,100* M_PI / 2.0);
@@ -56,15 +56,13 @@ public:
   template<typename Indiv>
     void eval(Indiv& ind)
   {
-    //std::cout << "EVAL" << std::endl;
+    std::cout << "EVAL" << std::endl;
     //INITIALISATION
     Eigen::Vector3d target;
     //target = {8.0, 0.0,0.0}; 
 
-    //std::vector<double> targ;
-    //targ = ind.gen().get_target();
-
-    //target = {targ[0], targ[1], 0.0};
+    _body_contact = false;
+    double _arrival_angle = 0;
 
     target = {-1.0, 1.0 ,0.0};	
    
@@ -93,8 +91,13 @@ public:
 
     //std::cout << "behavior descriptor : " << res[1] << " : " << res[2] << " : " << res[3] << std::endl;
 
-    //if(desc[0]<0 || desc[0]>1 ||desc[1]<0 || desc[1]>1)
-    //  this->_dead=true; //if something is wrong, we kill this solution. 
+    if(_body_contact){
+        _arrival_angle = -10000;
+	std::cout << "CONTACT" << std::endl;}
+
+
+    if(_arrival_angle == -10000)
+     this->_dead=true; //if something is wrong, we kill this solution. 
     
   }
   
@@ -110,14 +113,12 @@ public:
     //std::cout << "debug 0" << std::endl;
     double ctrl_dt = 0.015;
     g_robot->add_controller(std::make_shared<robot_dart::control::HexaControlNN<Model>>());
-//std::cout << "debug 1" << std::endl;
-    std::static_pointer_cast<robot_dart::control::HexaControlNN<Model>>(g_robot->controllers()[0])->set_h_params(std::vector<double>(1, ctrl_dt));
-//std::cout << "debug 2" << std::endl;
-    std::static_pointer_cast<robot_dart::control::HexaControlNN<Model>>(g_robot->controllers()[0])->setModel(model); //TODO : understand why do we use a static pointer cast
-//std::cout << "debug 3" << std::endl;
-    std::static_pointer_cast<robot_dart::control::HexaControlNN<Model>>(g_robot->controllers()[0])->setTarget(target);
+    //std::static_pointer_cast<robot_dart::control::HexaControlNN<Model>>(g_robot->controllers()[0])->set_h_params(std::vector<double>(1, ctrl_dt));
 
-    //std::cout << "launch simu" << std::endl;    
+    std::static_pointer_cast<robot_dart::control::HexaControlNN<Model>>(g_robot->controllers()[0])->setModel(model); //TODO : understand why do we use a static pointer cast
+
+    std::static_pointer_cast<robot_dart::control::HexaControlNN<Model>>(g_robot->controllers()[0])->setTarget(target);
+  
     robot_dart::RobotDARTSimu simu(0.005); //creation d'une simulation
 
 #ifdef GRAPHIC
@@ -129,16 +130,22 @@ public:
     simu.add_robot(g_robot);
 
     simu.add_descriptor(std::make_shared<robot_dart::descriptor::HexaDescriptor>(robot_dart::descriptor::HexaDescriptor(simu)));
-  
+    simu.add_descriptor(std::make_shared<robot_dart::descriptor::DutyCycle>(robot_dart::descriptor::DutyCycle(simu)));
+    
+    std::cout << "nb de descriptors: " << simu.descriptors().size() << std::endl;
+ 
     simu.run(5);
+
+    _body_contact = std::static_pointer_cast<robot_dart::descriptor::DutyCycle>(simu.descriptor(1))->body_contact(); //should be descriptor 1
+    _traj = std::static_pointer_cast<robot_dart::descriptor::HexaDescriptor>(simu.descriptor(0))->traj;
 
     g_robot.reset();
 
-    _traj=std::static_pointer_cast<robot_dart::descriptor::HexaDescriptor>(simu.descriptor(0))->traj;
-
     //std::cout << "Trajectory: " << _traj << std::endl;
-
-  }
+    //for (int i = 0; i < 1000; i++)
+      //{
+        //std::cout << "traj " << i << " : " << _traj[i][0] << " - " << _traj[i][1] << std::endl;}
+     }
 
 
   std::vector<double> get_fit_bd(std::vector<Eigen::VectorXf> & traj, Eigen::Vector3d & target)
@@ -291,6 +298,7 @@ public:
 private:
   std::vector<double> _ctrl;
   std::vector<Eigen::VectorXf> _traj;
+  bool _body_contact;
 
   
 };
