@@ -61,10 +61,7 @@ public:
     Eigen::Vector3d target;
     //target = {8.0, 0.0,0.0}; 
 
-    //std::vector<double> targ;
-    //targ = ind.gen().get_target();
-
-    //target = {targ[0], targ[1], 0.0};
+    _body_contact = false;
 
     target = {-1.0, 1.0 ,0.0};	
    
@@ -93,8 +90,12 @@ public:
 
     //std::cout << "behavior descriptor : " << res[1] << " : " << res[2] << " : " << res[3] << std::endl;
 
-    //if(desc[0]<0 || desc[0]>1 ||desc[1]<0 || desc[1]>1)
-    //  this->_dead=true; //if something is wrong, we kill this solution. 
+    if(_body_contact){
+        _arrival_angle = -10000;}
+
+
+    if(_arrival_angle == -10000)
+     this->_dead=true; //if something is wrong, we kill this solution. 
     
   }
   
@@ -110,14 +111,12 @@ public:
     //std::cout << "debug 0" << std::endl;
     double ctrl_dt = 0.015;
     g_robot->add_controller(std::make_shared<robot_dart::control::HexaControlNN<Model>>());
-//std::cout << "debug 1" << std::endl;
-    std::static_pointer_cast<robot_dart::control::HexaControlNN<Model>>(g_robot->controllers()[0])->set_h_params(std::vector<double>(1, ctrl_dt));
-//std::cout << "debug 2" << std::endl;
-    std::static_pointer_cast<robot_dart::control::HexaControlNN<Model>>(g_robot->controllers()[0])->setModel(model); //TODO : understand why do we use a static pointer cast
-//std::cout << "debug 3" << std::endl;
-    std::static_pointer_cast<robot_dart::control::HexaControlNN<Model>>(g_robot->controllers()[0])->setTarget(target);
+    //std::static_pointer_cast<robot_dart::control::HexaControlNN<Model>>(g_robot->controllers()[0])->set_h_params(std::vector<double>(1, ctrl_dt));
 
-    //std::cout << "launch simu" << std::endl;    
+    std::static_pointer_cast<robot_dart::control::HexaControlNN<Model>>(g_robot->controllers()[0])->setModel(model); //TODO : understand why do we use a static pointer cast
+
+    std::static_pointer_cast<robot_dart::control::HexaControlNN<Model>>(g_robot->controllers()[0])->setTarget(target);
+  
     robot_dart::RobotDARTSimu simu(0.005); //creation d'une simulation
 
 #ifdef GRAPHIC
@@ -129,12 +128,14 @@ public:
     simu.add_robot(g_robot);
 
     simu.add_descriptor(std::make_shared<robot_dart::descriptor::HexaDescriptor>(robot_dart::descriptor::HexaDescriptor(simu)));
+    sume.add_descriptor(std::make_shared<robot_dart::descriptor::DutyCycle>(robot_dart::descriptor::DutyCycle(simu)));
   
     simu.run(5);
 
-    g_robot.reset();
+    _body_contact = std::static_pointer_cast<robot_dart::descriptor::DutyCycle>(simu.descriptor(1))->body_contact(); //should be descriptor 1
+    _traj = std::static_pointer_cast<robot_dart::descriptor::HexaDescriptor>(simu.descriptor(0))->traj;
 
-    _traj=std::static_pointer_cast<robot_dart::descriptor::HexaDescriptor>(simu.descriptor(0))->traj;
+    g_robot.reset();
 
     //std::cout << "Trajectory: " << _traj << std::endl;
 
@@ -291,6 +292,7 @@ public:
 private:
   std::vector<double> _ctrl;
   std::vector<Eigen::VectorXf> _traj;
+  bool _body_contact;
 
   
 };
