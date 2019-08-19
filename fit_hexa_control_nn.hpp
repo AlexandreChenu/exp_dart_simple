@@ -62,6 +62,7 @@ public:
     //target = {8.0, 0.0,0.0}; 
 
     _body_contact = false;
+    double _arrival_angle = 0;
 
     target = {-1.0, 1.0 ,0.0};	
    
