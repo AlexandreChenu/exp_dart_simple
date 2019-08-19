@@ -37,6 +37,13 @@ namespace robot_dart {
 		Eigen::VectorXd target_positions = Eigen::VectorXd::Zero(18 + 6);
 		for (size_t i = 0; i < angles.size(); i++)
 			target_positions(i+6) = angles[i];
+			//if ((i+1)%3 ==0){
+			//	target_positions(i+6) = 15;}
+			//else{
+			//	target_positions(i+6) = -15;}
+		
+
+		//target_positions = {0,0,0,0,0,0,-15,-15,15,-15,-15,15,-15,-15,15,-15,-15,15,-15,-15,15,-15,-15,15};
 
                 Eigen::VectorXd q = robot->skeleton()->getPositions();
                 Eigen::VectorXd q_err = target_positions - q;
@@ -71,7 +78,7 @@ namespace robot_dart {
 
             std::vector<double> get_angles(const std::shared_ptr<robot_dart::Robot>& robot)
             {
-		 double p_max = 15.0;
+		 double p_max = 1.0;
                 int n_Dof = 12;
                 //Eigen::VectorXd commands = Eigen::VectorXd::Zero(18);
 
@@ -131,12 +138,15 @@ namespace robot_dart {
 
                         if (i % 2 == 1){
                             commands_out.push_back(out_nn[i]);
-                            commands_out.push_back(-out_nn[i]); //add same value for DOF3
+                            commands_out.push_back(out_nn[i]); //add same value for DOF3
                         }
                         else{
                             commands_out.push_back(out_nn[i]);
                         }
                     }
+		
+		//for (int i = 0; i< 18; i++) 
+		//	std::cout << "command " << i << ": " << commands_out[i] << std::endl;
 
                 //std::cout << "test unitaire - size de la commande en sortie format std vector(=18?) : " << commands_out.size() << std::endl;
 		

@@ -56,7 +56,7 @@ public:
   template<typename Indiv>
     void eval(Indiv& ind)
   {
-    //std::cout << "EVAL" << std::endl;
+    std::cout << "EVAL" << std::endl;
     //INITIALISATION
     Eigen::Vector3d target;
     //target = {8.0, 0.0,0.0}; 
@@ -92,7 +92,8 @@ public:
     //std::cout << "behavior descriptor : " << res[1] << " : " << res[2] << " : " << res[3] << std::endl;
 
     if(_body_contact){
-        _arrival_angle = -10000;}
+        _arrival_angle = -10000;
+	std::cout << "CONTACT" << std::endl;}
 
 
     if(_arrival_angle == -10000)
@@ -129,8 +130,10 @@ public:
     simu.add_robot(g_robot);
 
     simu.add_descriptor(std::make_shared<robot_dart::descriptor::HexaDescriptor>(robot_dart::descriptor::HexaDescriptor(simu)));
-    sume.add_descriptor(std::make_shared<robot_dart::descriptor::DutyCycle>(robot_dart::descriptor::DutyCycle(simu)));
-  
+    simu.add_descriptor(std::make_shared<robot_dart::descriptor::DutyCycle>(robot_dart::descriptor::DutyCycle(simu)));
+    
+    std::cout << "nb de descriptors: " << simu.descriptors().size() << std::endl;
+ 
     simu.run(5);
 
     _body_contact = std::static_pointer_cast<robot_dart::descriptor::DutyCycle>(simu.descriptor(1))->body_contact(); //should be descriptor 1
@@ -139,12 +142,10 @@ public:
     g_robot.reset();
 
     //std::cout << "Trajectory: " << _traj << std::endl;
-        for (int i = 0; i < 1000; i++)
-      {
-
-        std::cout << "traj " << i << " : " << _traj[i][0] << " - " << _traj[i][1] << std::endl;}
-
-  }
+    //for (int i = 0; i < 1000; i++)
+      //{
+        //std::cout << "traj " << i << " : " << _traj[i][0] << " - " << _traj[i][1] << std::endl;}
+     }
 
 
   std::vector<double> get_fit_bd(std::vector<Eigen::VectorXf> & traj, Eigen::Vector3d & target)
