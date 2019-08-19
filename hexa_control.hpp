@@ -18,7 +18,7 @@ namespace robot_dart {
         public:
             void set_params(const std::vector<double>& ctrl)
             {
-                _controller.set_parameters(ctrl);
+                //_controller.set_parameters(ctrl);
             }
 
             size_t output_size() const { return 18; }
@@ -148,7 +148,7 @@ namespace robot_dart {
             
 
         protected:
-            hexapod_controller::HexapodControllerSimple _controller;
+            //hexapod_controller::HexapodControllerSimple _controller;
             double _dt;
             bool _h_params_set = false;
             Indiv _model; 

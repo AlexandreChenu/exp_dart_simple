@@ -23,7 +23,35 @@ namespace robot_dart {
 	  //if( traj.back()[0] > 1 || traj.back()[1] > 1 || traj.back()[0] < -1 || traj.back()[1] < -1 )
 	  //std::cout<<"ERROR "<<traj.back().transpose()<<std::endl;
 	}
-      };
+      }; //struct HexaDescriptor
+
+     struct DutyCycle:public BaseDescriptor{
+      public:
+	DutyCycle(RobotDARTSimu& simu, size_t desc_dump = 1):BaseDescriptor(simu,desc_dump),_body_contact(false)
+	{}
+
+	virtual void operator()()
+	{
+	  const dart::collision::CollisionResult& col_res = _simu.world()->getLastCollisionResult();
+
+
+	  std::string part_name;
+	  part_name = "body";
+
+      dart::dynamics::BodyNodePtr part_to_check = _simu.robots().back()->skeleton()->getBodyNode(part_name);
+      if(col_res.inCollision(part_to_check))
+        _body_contact=true;
+	  
+	} //void operator
+
+	bool body_contact(){return _body_contact;}
+
+      protected:
+	bool _body_contact;
+	
+      };//struct dutycycle
+
+
     } // namespace descriptor
 } // namespace robot_dart
 
