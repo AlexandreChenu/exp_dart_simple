@@ -93,10 +93,10 @@ struct Params {
     struct dnn {
         SFERES_CONST size_t nb_inputs = 12 + 2 + 3 + 1; //previous commands(12) -> DOF3 = -DOF2 / distance to target / orientation
         SFERES_CONST size_t nb_outputs  = 12; //new commands
-        SFERES_CONST size_t min_nb_neurons  = 41;
-        SFERES_CONST size_t max_nb_neurons  = 100;
-        SFERES_CONST size_t min_nb_conns  = 150;
-        SFERES_CONST size_t max_nb_conns  = 300;
+        SFERES_CONST size_t min_nb_neurons  = 4;
+        SFERES_CONST size_t max_nb_neurons  = 35;
+        SFERES_CONST size_t min_nb_conns  = 5;
+        SFERES_CONST size_t max_nb_conns  = 40;
         SFERES_CONST float  max_weight  = 2.0f;
         SFERES_CONST float  max_bias  = 2.0f;
 
@@ -160,7 +160,7 @@ int main(int argc, char **argv)
 
     typedef PfWSum<weight_t> pf_t;
     typedef AfSigmoidNoBias<> af_t;
-    typedef sferes::gen::DnnFF<Neuron<pf_t, af_t>, Connection<weight_t>, Params> gen_t;
+    typedef sferes::gen::Dnn<Neuron<pf_t, af_t>, Connection<weight_t>, Params> gen_t;
 
     typedef phen::Dnn<gen_t, fit_t, Params> phen_t;
 
