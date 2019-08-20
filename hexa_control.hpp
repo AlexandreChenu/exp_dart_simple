@@ -28,12 +28,8 @@ namespace robot_dart {
 		if (!_h_params_set) {
                     _dt = robot->skeleton()->getTimeStep();
                 }
-                //auto angles = _controller.pos(t);
-                auto angles = get_angles(robot);
-
-                //Eigen::VectorXd target_positions = Eigen::VectorXd::Zero(18 + 6);
-                //for (size_t i = 0; i < angles.size(); i++)
-                    //target_positions(i + 6) = ((i % 3 == 1) ? 1.0 : -1.0) * angles[i];
+                auto angles = get_angles(robot, t);
+		
 		Eigen::VectorXd target_positions = Eigen::VectorXd::Zero(18 + 6);
 		for (size_t i = 0; i < angles.size(); i++)
 			target_positions(i+6) = angles[i];
@@ -69,22 +65,21 @@ namespace robot_dart {
                 _target = target;
             }
 
-            std::vector<double> get_angles(const std::shared_ptr<robot_dart::Robot>& robot)
+            std::vector<double> get_angles(const std::shared_ptr<robot_dart::Robot>& robot, double t)
             {
 		 double p_max = 1.0;
                 int n_Dof = 12;
                 //Eigen::VectorXd commands = Eigen::VectorXd::Zero(18);
 
-                std::vector<float> inputs(2 + n_Dof + 3); //HOW MANY ENTRIES?
+                std::vector<float> inputs(2 + n_Dof + 3 + 1); //HOW MANY ENTRIES?
 
                 //auto pos?
                 auto pos= robot->skeleton()->getPositions().head(6).tail(3).cast <float> (); //obtain robot's position
+		
 
 		inputs[0] = pos[0] - _target[0]; //inputs is gradient of position
                 inputs[1] = pos[1] - _target[1];
 		
-                //Eigen::VectorXd prev_commands_full = robot->skeleton()->getCommands(); //get previous command -> TODO : check, it should be of size 24
-                //Eigen::VectorXd prev_joint_full = robot->skeleton()-> //how to get the joint angle?
 		Eigen::VectorXd prev_commands_full = robot->skeleton()->getPositions();
 		
                 
@@ -101,11 +96,13 @@ namespace robot_dart {
 
                 //auto angles? 
                 auto angles = robot->skeleton()->getPositions().head(6).head(3).cast <float> (); //obtain robot's orientation
-
+		
                 for (int i = 0; i < 3 ; i++){
                     inputs[2 + n_Dof + i] = angles[i]; // yaw / pitch / roll
 		    //std::cout << "input "<< i << ": "<<inputs[i] << std::endl;
                 }
+
+		inputs[2 + n_Dof + 3] = t;
 
                 _model.gen().init();
                 for (int j = 0; j < _model.gen().get_depth() + 1; ++j)

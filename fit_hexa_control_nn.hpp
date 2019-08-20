@@ -59,22 +59,18 @@ public:
     //INITIALISATION
     Eigen::Vector3d target;
     //target = {8.0, 0.0,0.0}; 
-//	std::cout << "\n\n\n EVAL \n\n\n" << std::endl;
     _body_contact = false;
+    _on_back = false;
     double _arrival_angle = 0;
 
     target = {-1.0, 1.0 ,0.0};	
    
-    //std::cout << "target : " << target << std::endl;
 
     simulate(target, ind); //simulate robot behavior for given nn (ind) and target
 
     std::vector<double> res(4);
     res = get_fit_bd(_traj, target);
 
-    //this->_value = res[0]; //save fitness value
-    
-    //std::cout << "fitness : " << res[0] << std::endl;
 
     // descriptor is the final position of the robot. 
     std::vector<double> desc(3);
@@ -84,21 +80,20 @@ public:
     desc[2] = res[3];
 	 
 	  
-    //std::cout << "behavior descriptor in evaluation: " << desc[0] << " - " << desc[1] << " - " << desc[2] << std::endl;
-
     this->set_desc(desc); //save behavior descriptor
 
-    //std::cout << "behavior descriptor : " << res[1] << " : " << res[2] << " : " << res[3] << std::endl;
-
-    if(_body_contact)
+    if(_body_contact || _on_back)
      this->_value = res[0] - 10;
 	//this->_dead=true; //if something is wrong, we kill this solution.
     else{
 	this->_value = res[0];
-	_not_dead ++;} 
-    
-  //  std::cout << "\n\n\nEND of eval\n\n\n" << std::endl;    
-    //std::cout << "nbr of not dead: " << _not_dead << std::endl;
+	_not_dead ++;}
+
+    //if(_on_back)
+	//std::cout << "on back" << std::endl;
+    //else
+	//std::cout << "stable" << std::endl;
+
   }
   
   template<typename Model>
@@ -130,11 +125,11 @@ public:
     simu.add_descriptor(std::make_shared<robot_dart::descriptor::HexaDescriptor>(robot_dart::descriptor::HexaDescriptor(simu)));
     simu.add_descriptor(std::make_shared<robot_dart::descriptor::DutyCycle>(robot_dart::descriptor::DutyCycle(simu)));
     
-    simu.run(5);
+    simu.run(4);
 
     _body_contact = std::static_pointer_cast<robot_dart::descriptor::DutyCycle>(simu.descriptor(1))->body_contact(); //should be descriptor 1
     _traj = std::static_pointer_cast<robot_dart::descriptor::HexaDescriptor>(simu.descriptor(0))->traj;
-
+    _on_back = std::static_pointer_cast<robot_dart::descriptor::HexaDescriptor>(simu.descriptor(0))->on_back();
     g_robot.reset();
 
     //std::cout << "Trajectory: " << _traj << std::endl;
@@ -294,7 +289,7 @@ private:
   std::vector<Eigen::VectorXf> _traj;
   bool _body_contact;
   int _not_dead = 0;
-  
+  bool _on_back; 
 };
 
 

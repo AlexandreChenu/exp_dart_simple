@@ -3,6 +3,7 @@
 
 // for size_t
 #include <cstddef>
+#include <cstdlib>
 
 namespace robot_dart {
     class RobotDARTSimu;
@@ -12,17 +13,27 @@ namespace robot_dart {
 
       struct HexaDescriptor:public BaseDescriptor{
         public:
-	HexaDescriptor(RobotDARTSimu& simu, size_t desc_dump = 1):BaseDescriptor(simu,desc_dump)
+	HexaDescriptor(RobotDARTSimu& simu, size_t desc_dump = 1):BaseDescriptor(simu,desc_dump),_on_back(false)
 	{}
 	std::vector<Eigen::VectorXf> traj;
 	virtual void operator()()
 	{
 	  auto pos=_simu.robots().back()->skeleton()->getPositions().head(6).tail(3).cast <float> ();
 	  traj.push_back(pos.head(2));
+	  auto ang = _simu.robots().back()->skeleton()->getPositions().head(6).head(3).cast <float> ();
+	  
+	  if (abs(ang[1]) > 1.6)
+		_on_back = true;
+	}
+	
+	bool on_back(){return _on_back;} 
+		 
+
+	private :
+		bool _on_back;
 	  //std::cout<<pos.head(2).transpose()<<std::endl;
 	  //if( traj.back()[0] > 1 || traj.back()[1] > 1 || traj.back()[0] < -1 || traj.back()[1] < -1 )
 	  //std::cout<<"ERROR "<<traj.back().transpose()<<std::endl;
-	}
       }; //struct HexaDescriptor
 
      struct DutyCycle:public BaseDescriptor{
@@ -46,8 +57,6 @@ namespace robot_dart {
 
         //  for (const auto& elem: colliding_frames) {
 	//	std::cout << elem->getName() << std::endl;}	  
-
-	  _body_contact = false;
  
    	  dart::dynamics::BodyNodePtr part_to_check = _simu.robots().back()->skeleton()->getBodyNode("base_link");
 
@@ -66,8 +75,7 @@ namespace robot_dart {
 	bool body_contact(){return _body_contact;}
 
       protected:
-	bool _body_contact;
-	
+	bool _body_contact;	
       };//struct dutycycle
 
 

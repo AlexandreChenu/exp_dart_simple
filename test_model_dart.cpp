@@ -173,7 +173,7 @@ int main(int argc, char **argv)
     //Eigen::Vector3d target = {-0.211234, 0.59688,0.0};
     
     Eigen::Vector3d target = {-1.0, 1.0 ,0.0};
-    const std::string filename = "model_7700.bin";
+    const std::string filename = "model_9500.bin";
 
     std::cout << "model...loading" << std::endl;
         {

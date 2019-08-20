@@ -86,12 +86,12 @@ struct Params {
         SFERES_CONST size_t init_size = 100;
         // size of a batch
         SFERES_CONST size_t size = 100;
-        SFERES_CONST size_t nb_gen = 10000;
+        SFERES_CONST size_t nb_gen = 25000;
         SFERES_CONST size_t dump_period = 500;
     };
 
     struct dnn {
-        SFERES_CONST size_t nb_inputs = 12 + 2 + 3; //previous commands(12) -> DOF3 = -DOF2 / distance to target / orientation
+        SFERES_CONST size_t nb_inputs = 12 + 2 + 3 + 1; //previous commands(12) -> DOF3 = -DOF2 / distance to target / orientation
         SFERES_CONST size_t nb_outputs  = 12; //new commands
         SFERES_CONST size_t min_nb_neurons  = 41;
         SFERES_CONST size_t max_nb_neurons  = 100;
