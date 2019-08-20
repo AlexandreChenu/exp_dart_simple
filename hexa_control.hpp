@@ -105,7 +105,8 @@ namespace robot_dart {
 		inputs[2 + n_Dof + 3] = t;
 
                 _model.gen().init();
-                for (int j = 0; j < _model.gen().get_depth() + 1; ++j)
+                //for (int j = 0; j < _model.gen().get_depth() + 1; ++j)
+		for (int j = 0; j < 10 + 1; ++j)
                     _model.gen().step(inputs); 
 
                 Eigen::VectorXd out_nn(12);
