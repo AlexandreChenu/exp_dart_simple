@@ -32,15 +32,34 @@ namespace robot_dart {
 
 	virtual void operator()()
 	{
-	  const dart::collision::CollisionResult& col_res = _simu.world()->getLastCollisionResult();
+	const dart::collision::CollisionResult& col_res = _simu.world()->getLastCollisionResult();
+	  //const std::unordered_set< const dart::dynamics::BodyNode * > colliding_nodes = col_res.getCollidingBodyNodes ();
+	  //const std::unordered_set< const dart::dynamics::ShapeFrame * > colliding_frames = col_res.getCollidingShapeFrames ();	  
+	  
+ 	
+	//std::cout << "nodes : " << std::endl;
 
+	//  for (const auto& elem: colliding_nodes) {
+    	//	std::cout << elem->getName() << std::endl;
+	//	}
+	//std::cout << "shapes : " << std::endl;
 
-	  std::string part_name;
-	  part_name = "body";
+        //  for (const auto& elem: colliding_frames) {
+	//	std::cout << elem->getName() << std::endl;}	  
 
-      dart::dynamics::BodyNodePtr part_to_check = _simu.robots().back()->skeleton()->getBodyNode(part_name);
-      if(col_res.inCollision(part_to_check))
-        _body_contact=true;
+	  _body_contact = false;
+ 
+   	  dart::dynamics::BodyNodePtr part_to_check = _simu.robots().back()->skeleton()->getBodyNode("base_link");
+
+	  if(col_res.inCollision(part_to_check)){
+             _body_contact=true;
+	      }
+		
+	  //if (_body_contact){
+	  //	std::cout << "collision" << std::endl;}
+
+	  //else {
+	//	std::cout << "no collision" << std::endl;}
 	  
 	} //void operator
 

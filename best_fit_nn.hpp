@@ -22,7 +22,6 @@ namespace sferes {
         assert(!ea.pop().empty());
         _best = *std::max_element(ea.pop().begin(), ea.pop().end(), fit::compare_max());
 
-        std::cout << "pop size: " << ea.pop().size() << std::endl;
 
         this->_create_log_file(ea, "bestfit.dat");
         if (ea.dump_enabled())

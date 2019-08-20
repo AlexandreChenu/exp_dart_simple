@@ -56,11 +56,10 @@ public:
   template<typename Indiv>
     void eval(Indiv& ind)
   {
-    //std::cout << "EVAL" << std::endl;
     //INITIALISATION
     Eigen::Vector3d target;
     //target = {8.0, 0.0,0.0}; 
-
+//	std::cout << "\n\n\n EVAL \n\n\n" << std::endl;
     _body_contact = false;
     double _arrival_angle = 0;
 
@@ -73,7 +72,7 @@ public:
     std::vector<double> res(4);
     res = get_fit_bd(_traj, target);
 
-    this->_value = res[0]; //save fitness value
+    //this->_value = res[0]; //save fitness value
     
     //std::cout << "fitness : " << res[0] << std::endl;
 
@@ -91,25 +90,25 @@ public:
 
     //std::cout << "behavior descriptor : " << res[1] << " : " << res[2] << " : " << res[3] << std::endl;
 
-    if(_body_contact){
-        _arrival_angle = -10000;}
-
-
-    if(_arrival_angle == -10000)
-     this->_dead=true; //if something is wrong, we kill this solution. 
+    if(_body_contact)
+     this->_value = res[0] - 10;
+	//this->_dead=true; //if something is wrong, we kill this solution.
+    else{
+	this->_value = res[0];
+	_not_dead ++;} 
     
+  //  std::cout << "\n\n\nEND of eval\n\n\n" << std::endl;    
+    //std::cout << "nbr of not dead: " << _not_dead << std::endl;
   }
   
   template<typename Model>
   void simulate(Eigen::Vector3d& target, Model& model) 
   {
 
-    //std::cout << "SIMU" << std::endl;
     auto g_robot=global::global_robot->clone();
     g_robot->skeleton()->setPosition(5, 0.15);
 
 
-    //std::cout << "debug 0" << std::endl;
     double ctrl_dt = 0.015;
     g_robot->add_controller(std::make_shared<robot_dart::control::HexaControlNN<Model>>());
     //std::static_pointer_cast<robot_dart::control::HexaControlNN<Model>>(g_robot->controllers()[0])->set_h_params(std::vector<double>(1, ctrl_dt));
@@ -129,8 +128,8 @@ public:
     simu.add_robot(g_robot);
 
     simu.add_descriptor(std::make_shared<robot_dart::descriptor::HexaDescriptor>(robot_dart::descriptor::HexaDescriptor(simu)));
-    sume.add_descriptor(std::make_shared<robot_dart::descriptor::DutyCycle>(robot_dart::descriptor::DutyCycle(simu)));
-  
+    simu.add_descriptor(std::make_shared<robot_dart::descriptor::DutyCycle>(robot_dart::descriptor::DutyCycle(simu)));
+    
     simu.run(5);
 
     _body_contact = std::static_pointer_cast<robot_dart::descriptor::DutyCycle>(simu.descriptor(1))->body_contact(); //should be descriptor 1
@@ -139,17 +138,17 @@ public:
     g_robot.reset();
 
     //std::cout << "Trajectory: " << _traj << std::endl;
-
-  }
+    //for (int i = 0; i < 1000; i++)
+      //{
+        //std::cout << "traj " << i << " : " << _traj[i][0] << " - " << _traj[i][1] << std::endl;}
+     }
 
 
   std::vector<double> get_fit_bd(std::vector<Eigen::VectorXf> & traj, Eigen::Vector3d & target)
   {
 	
-    //std::cout << "fit and bd" << std::endl;
     int size = traj.size();
   
-    //std::cout << "traj size: " << size << std::endl;
 
     double dist = 0;
     std::vector<double> zone_exp(3);
@@ -294,7 +293,7 @@ private:
   std::vector<double> _ctrl;
   std::vector<Eigen::VectorXf> _traj;
   bool _body_contact;
-
+  int _not_dead = 0;
   
 };
 

@@ -25,7 +25,7 @@ namespace robot_dart {
 
             Eigen::VectorXd query(const std::shared_ptr<robot_dart::Robot>& robot, double t)
             {
-                if (!_h_params_set) {
+		if (!_h_params_set) {
                     _dt = robot->skeleton()->getTimeStep();
                 }
                 //auto angles = _controller.pos(t);
@@ -71,7 +71,7 @@ namespace robot_dart {
 
             std::vector<double> get_angles(const std::shared_ptr<robot_dart::Robot>& robot)
             {
-		 double p_max = 15.0;
+		 double p_max = 1.0;
                 int n_Dof = 12;
                 //Eigen::VectorXd commands = Eigen::VectorXd::Zero(18);
 
@@ -79,8 +79,6 @@ namespace robot_dart {
 
                 //auto pos?
                 auto pos= robot->skeleton()->getPositions().head(6).tail(3).cast <float> (); //obtain robot's position
-//                std::cout << "position x: " << pos[0] << std::endl;
-//	        std::cout << "position y: " << pos[1] << std::endl;
 
 		inputs[0] = pos[0] - _target[0]; //inputs is gradient of position
                 inputs[1] = pos[1] - _target[1];
@@ -89,9 +87,6 @@ namespace robot_dart {
                 //Eigen::VectorXd prev_joint_full = robot->skeleton()-> //how to get the joint angle?
 		Eigen::VectorXd prev_commands_full = robot->skeleton()->getPositions();
 		
-                //std::cout << "\ntest local - size de get commands : " << prev_commands_full.size() << std::endl;
-		//std::cout << "\ntest local - size de get positions : " << robot->skeleton()->getPositions().size() << std::endl;
-		//std::cout << "\ntest local - get positions : " << robot->skeleton()->getPositions() << std::endl;
                 
                 std::vector<double> prev_commands;
                 for (int i = 1; i < 19; i++){ 
@@ -99,11 +94,6 @@ namespace robot_dart {
                         prev_commands.push_back(prev_commands_full[5 + i]);} //we don't consider dof 3 TODO : check order of commands 
                 }
 		  
-		 //std::cout << "prev_commands size: " << prev_commands.size() << std::endl;
-		 
-		//for (int i = 0; i<prev_commands.size(); i++)
-		 //std::cout << "prev commands "<< i << ": " << prev_commands[i] << std::endl;
-//                std::cout << "test unitaire - size de la commande récupérée (= 12?) : " << prev_commands.size() << std::endl;
 
                 for (int i = 0; i < n_Dof ; i++){
                     inputs[2 + i] = prev_commands[i]; //TODO : get current angles
@@ -131,12 +121,15 @@ namespace robot_dart {
 
                         if (i % 2 == 1){
                             commands_out.push_back(out_nn[i]);
-                            commands_out.push_back(-out_nn[i]); //add same value for DOF3
+                            commands_out.push_back(out_nn[i]); //add same value for DOF3
                         }
                         else{
                             commands_out.push_back(out_nn[i]);
                         }
                     }
+		
+		//for (int i = 0; i< 18; i++) 
+		//	std::cout << "command " << i << ": " << commands_out[i] << std::endl;
 
                 //std::cout << "test unitaire - size de la commande en sortie format std vector(=18?) : " << commands_out.size() << std::endl;
 		

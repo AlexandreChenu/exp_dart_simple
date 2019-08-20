@@ -171,8 +171,9 @@ int main(int argc, char **argv)
     phen_t model; 
 
     //Eigen::Vector3d target = {-0.211234, 0.59688,0.0};
-    Eigen::Vector3d target = {-5.0, 5.0 ,0.0};
-    const std::string filename = "model_6400.bin";
+    
+    Eigen::Vector3d target = {-1.0, 1.0 ,0.0};
+    const std::string filename = "model_7700.bin";
 
     std::cout << "model...loading" << std::endl;
         {
