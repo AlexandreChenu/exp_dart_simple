@@ -38,7 +38,7 @@ namespace robot_dart {
 
 			target_positions(i + 6 + 0) = angles[i + 0] * M_PI_4 / 2;
 			target_positions(i + 6 + 1) = angles[i + 1] * M_PI_4;
-			target_positions(i + 6 + 2) = angles[i + 2] * -M_PI_4;
+			target_positions(i + 6 + 2) = angles[i + 2] * M_PI_4;
 			std::cout << "target pos "<< i << " : " << target_positions(i + 6 + 0) << " " << target_positions(i + 6 + 1) << " " << target_positions(i + 6 + 2) << std::endl;
 		
 		}
