@@ -166,7 +166,7 @@ int main(int argc, char **argv)
 
     typedef PfWSum<weight_t> pf_t;
     typedef AfSigmoidNoBias<> af_t;
-    typedef sferes::gen::DnnFF<Neuron<pf_t, af_t>, Connection<weight_t>, Params> gen_t;
+    typedef sferes::gen::Dnn<Neuron<pf_t, af_t>, Connection<weight_t>, Params> gen_t;
 
     typedef phen::Dnn<gen_t, fit_t, Params> phen_t;
 
