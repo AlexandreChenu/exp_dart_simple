@@ -31,8 +31,19 @@ namespace robot_dart {
                 auto angles = get_angles(robot, t);
 		
 		Eigen::VectorXd target_positions = Eigen::VectorXd::Zero(18 + 6);
-		for (size_t i = 0; i < angles.size(); i++)
-			target_positions(i+6) = angles[i];
+		//for (size_t i = 0; i < angles.size(); i++)
+		//	target_positions(i+6) = angles[i];
+
+		for(size_t i = 0; i < angles.size(); i+=3){
+
+			target_positions(i + 6 + 0) = angles[i + 0] * M_PI_4 / 2;
+			target_positions(i + 6 + 1) = angles[i + 1] * M_PI_4;
+			target_positions(i + 6 + 2) = angles[i + 2] * -M_PI_4;
+			std::cout << "target pos "<< i << " : " << target_positions(i + 6 + 0) << " " << target_positions(i + 6 + 1) << " " << target_positions(i + 6 + 2) << std::endl;
+		
+		}
+
+
 
                 Eigen::VectorXd q = robot->skeleton()->getPositions();
                 Eigen::VectorXd q_err = target_positions - q;

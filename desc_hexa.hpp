@@ -61,7 +61,8 @@ namespace robot_dart {
    	  dart::dynamics::BodyNodePtr part_to_check = _simu.robots().back()->skeleton()->getBodyNode("base_link");
 
 	  if(col_res.inCollision(part_to_check)){
-             _body_contact=true;
+             	std::cout << "COLLISION" << std::endl;
+		_body_contact=true;
 	      }
 		
 	  //if (_body_contact){
