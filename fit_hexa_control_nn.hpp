@@ -33,8 +33,8 @@ namespace global{
 void load_and_init_robot()
 {
   std::cout<<"INIT Robot"<<std::endl;
-  global::global_robot = std::make_shared<robot_dart::Robot>("exp/exp_dart_simple/ressources/hexapod_v2.urdf");
-  //global::global_robot = std::make_shared<robot_dart::Robot>("exp/ressources/hexapod_v2.urdf");
+  //global::global_robot = std::make_shared<robot_dart::Robot>("exp/exp_dart_simple/ressources/hexapod_v2.urdf");
+  global::global_robot = std::make_shared<robot_dart::Robot>("exp/ressources/hexapod_v2.urdf");
   global::global_robot->set_position_enforced(true);
   //global::global_robot->set_position_enforced(true);
   //global_robot->skeleton()->setPosition(1,100* M_PI / 2.0);
@@ -79,14 +79,15 @@ public:
     desc[1] = res[2];
     desc[2] = res[3];
 	 
-	  
+	this ->_value = res[0];	  
     this->set_desc(desc); //save behavior descriptor
 
-    if(_body_contact || _on_back)
-     this->_value = res[0] - 10;
-	//this->_dead=true; //if something is wrong, we kill this solution.
+    if(_body_contact || _on_back){
+
+     std::cout << "body contact is " << _body_contact << " and on back is " << _on_back << std::endl; 
+	this->_dead=true; //if something is wrong, we kill this solution.
+   } 
     else{
-	this->_value = res[0];
 	_not_dead ++;}
 
     //if(_on_back)

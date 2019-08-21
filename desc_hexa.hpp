@@ -62,20 +62,24 @@ namespace robot_dart {
 
 	  if(col_res.inCollision(part_to_check)){
 		_body_contact=true;
+		std::cout << "KOKO" << std::endl;
 	      }
+	  if (_body_contact)
+		_collision = true;
 		
-	  if (_body_contact){
-	  	std::cout << "collision" << std::endl;}
-
-	  else {
-		std::cout << "no collision" << std::endl;}
+//	  if (_body_contact){
+//	  	std::cout << "collision" << std::endl;}
+//
+//	  else {
+//		std::cout << "no collision" << std::endl;}
 	  
 	} //void operator
 
-	bool body_contact(){return _body_contact;}
+	bool body_contact(){return _collision;}
 
       protected:
-	bool _body_contact;	
+	bool _body_contact;
+	bool _collision = false;	
       };//struct dutycycle
 
 

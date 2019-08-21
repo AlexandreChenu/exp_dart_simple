@@ -5,6 +5,7 @@
 #include "hexapod_controller_simple.hpp"
 #include "policy_control.hpp"
 
+#include <cmath>
 #include <modules/nn2/mlp.hpp>
 #include <modules/nn2/gen_dnn.hpp>
 #include <modules/nn2/phen_dnn.hpp>
@@ -39,11 +40,7 @@ namespace robot_dart {
 			target_positions(i + 6 + 0) = angles[i + 0] * M_PI_4 / 2;
 			target_positions(i + 6 + 1) = angles[i + 1] * M_PI_4;
 			target_positions(i + 6 + 2) = angles[i + 2] * M_PI_4;
-			std::cout << "target pos "<< i << " : " << target_positions(i + 6 + 0) << " " << target_positions(i + 6 + 1) << " " << target_positions(i + 6 + 2) << std::endl;
-		
 		}
-
-
 
                 Eigen::VectorXd q = robot->skeleton()->getPositions();
                 Eigen::VectorXd q_err = target_positions - q;
@@ -113,7 +110,7 @@ namespace robot_dart {
 		    //std::cout << "input "<< i << ": "<<inputs[i] << std::endl;
                 }
 
-		inputs[2 + n_Dof + 3] = t;
+		inputs[2 + n_Dof + 3] = std::fmod(t,1);
 
                 _model.gen().init();
                 //for (int j = 0; j < _model.gen().get_depth() + 1; ++j)
