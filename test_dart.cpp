@@ -64,7 +64,7 @@
 
 #include <cstdlib>
 
-
+#include "gen_mlp.hpp"
 #include "fit_hexa_control_nn.hpp"
 #include "best_fit_nn.hpp"
 
@@ -86,7 +86,7 @@ struct Params {
         SFERES_CONST size_t init_size = 100;
         // size of a batch
         SFERES_CONST size_t size = 100;
-        SFERES_CONST size_t nb_gen = 15000;
+        SFERES_CONST size_t nb_gen = 15001;
         SFERES_CONST size_t dump_period = 500;
     };
 
@@ -110,6 +110,12 @@ struct Params {
         //SFERES_CONST init_t init = random_topology;
         SFERES_CONST init_t init = ff;
     };
+    
+    struct mlp {
+        SFERES_CONST size_t layer_0_size = 12;
+        SFERES_CONST size_t layer_1_size = 18;
+    };
+
 
     struct parameters {
       SFERES_CONST float min = 0.0;
@@ -160,7 +166,7 @@ int main(int argc, char **argv)
 
     typedef PfWSum<weight_t> pf_t;
     typedef AfSigmoidNoBias<> af_t;
-    typedef sferes::gen::Dnn<Neuron<pf_t, af_t>, Connection<weight_t>, Params> gen_t;
+    typedef sferes::gen::GenMlp<Neuron<pf_t, af_t>, Connection<weight_t>, Params> gen_t;
 
     typedef phen::Dnn<gen_t, fit_t, Params> phen_t;
 

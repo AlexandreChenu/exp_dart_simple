@@ -33,8 +33,8 @@ namespace global{
 void load_and_init_robot()
 {
   std::cout<<"INIT Robot"<<std::endl;
-  //global::global_robot = std::make_shared<robot_dart::Robot>("exp/exp_dart_simple/ressources/hexapod_v2.urdf");
-  global::global_robot = std::make_shared<robot_dart::Robot>("exp/ressources/hexapod_v2.urdf");
+  global::global_robot = std::make_shared<robot_dart::Robot>("exp/exp_dart_simple/ressources/hexapod_v2.urdf");
+  //global::global_robot = std::make_shared<robot_dart::Robot>("exp/ressources/hexapod_v2.urdf");
   global::global_robot->set_position_enforced(true);
   //global::global_robot->set_position_enforced(true);
   //global_robot->skeleton()->setPosition(1,100* M_PI / 2.0);
