@@ -90,11 +90,6 @@ public:
     else{
 	_not_dead ++;}
 
-    //if(_on_back)
-	//std::cout << "on back" << std::endl;
-    //else
-	//std::cout << "stable" << std::endl;
-
   }
   
   template<typename Model>
@@ -133,10 +128,6 @@ public:
     _on_back = std::static_pointer_cast<robot_dart::descriptor::HexaDescriptor>(simu.descriptor(0))->on_back();
     g_robot.reset();
 
-    //std::cout << "Trajectory: " << _traj << std::endl;
-    //for (int i = 0; i < 1000; i++)
-      //{
-        //std::cout << "traj " << i << " : " << _traj[i][0] << " - " << _traj[i][1] << std::endl;}
      }
 
 

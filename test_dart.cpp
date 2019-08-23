@@ -75,7 +75,7 @@ using namespace sferes::gen::dnn;
 struct Params {
     struct nov {
         SFERES_CONST size_t deep = 3;
-        SFERES_CONST double l = 0.1; // according to hand tuning made on the 2D arm simulation
+        SFERES_CONST double l = 0.01; // according to hand tuning made on the 2D arm simulation
         SFERES_CONST double k = 15; // TODO right value?
         SFERES_CONST double eps = 0.1;// TODO right value??
     };
@@ -83,11 +83,11 @@ struct Params {
     // TODO: move to a qd::
     struct pop {
         // number of initial random points
-        SFERES_CONST size_t init_size = 100;
+        SFERES_CONST size_t init_size = 1000;
         // size of a batch
         SFERES_CONST size_t size = 100;
-        SFERES_CONST size_t nb_gen = 15001;
-        SFERES_CONST size_t dump_period = 500;
+        SFERES_CONST size_t nb_gen = 35001;
+        SFERES_CONST size_t dump_period = 100;
     };
 
     struct dnn {
@@ -151,7 +151,7 @@ struct Params {
 
 int main(int argc, char **argv) 
 {   
-    tbb::task_scheduler_init init(32);
+    tbb::task_scheduler_init init(10);
 
     load_and_init_robot();
 
@@ -166,7 +166,7 @@ int main(int argc, char **argv)
 
     typedef PfWSum<weight_t> pf_t;
     typedef AfSigmoidNoBias<> af_t;
-    typedef sferes::gen::Dnn<Neuron<pf_t, af_t>, Connection<weight_t>, Params> gen_t;
+    typedef sferes::gen::GenMlp<Neuron<pf_t, af_t>, Connection<weight_t>, Params> gen_t;
 
     typedef phen::Dnn<gen_t, fit_t, Params> phen_t;
 
