@@ -64,7 +64,8 @@
 
 #include <cstdlib>
 
-#include "gen_mlp.hpp"
+//#include "gen_mlp.hpp"
+#include "gen_mlp_3_lay.hpp"
 #include "fit_hexa_control_nn.hpp"
 #include "best_fit_nn.hpp"
 
@@ -75,7 +76,7 @@ using namespace sferes::gen::dnn;
 struct Params {
     struct nov {
         SFERES_CONST size_t deep = 3;
-        SFERES_CONST double l = 0.01; // according to hand tuning made on the 2D arm simulation
+        SFERES_CONST double l = 0.07; // according to hand tuning made on the 2D arm simulation
         SFERES_CONST double k = 15; // TODO right value?
         SFERES_CONST double eps = 0.1;// TODO right value??
     };
@@ -152,7 +153,7 @@ struct Params {
 
 int main(int argc, char **argv) 
 {   
-    tbb::task_scheduler_init init(48);
+    tbb::task_scheduler_init init(12);
 
     load_and_init_robot();
 
