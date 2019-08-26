@@ -151,7 +151,7 @@ struct Params {
 
 int main(int argc, char **argv) 
 {   
-    tbb::task_scheduler_init init(10);
+    tbb::task_scheduler_init init(12);
 
     load_and_init_robot();
 
@@ -166,7 +166,7 @@ int main(int argc, char **argv)
 
     typedef PfWSum<weight_t> pf_t;
     typedef AfSigmoidNoBias<> af_t;
-    typedef sferes::gen::GenMlp<Neuron<pf_t, af_t>, Connection<weight_t>, Params> gen_t;
+    typedef sferes::gen::Dnn<Neuron<pf_t, af_t>, Connection<weight_t>, Params> gen_t;
 
     typedef phen::Dnn<gen_t, fit_t, Params> phen_t;
 
