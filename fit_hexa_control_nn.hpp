@@ -63,7 +63,7 @@ public:
     _on_back = false;
     double _arrival_angle = 0;
 
-    target = {-1.0, 1.0 ,0.0};	
+    target = {-0.5, 0.5 ,0.0};	
    
 
     simulate(target, ind); //simulate robot behavior for given nn (ind) and target
@@ -121,7 +121,7 @@ public:
     simu.add_descriptor(std::make_shared<robot_dart::descriptor::HexaDescriptor>(robot_dart::descriptor::HexaDescriptor(simu)));
     simu.add_descriptor(std::make_shared<robot_dart::descriptor::DutyCycle>(robot_dart::descriptor::DutyCycle(simu)));
     
-    simu.run(4);
+    simu.run(5);
 
     _body_contact = std::static_pointer_cast<robot_dart::descriptor::DutyCycle>(simu.descriptor(1))->body_contact(); //should be descriptor 1
     _traj = std::static_pointer_cast<robot_dart::descriptor::HexaDescriptor>(simu.descriptor(0))->traj;
