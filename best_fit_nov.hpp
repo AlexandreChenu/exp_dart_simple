@@ -61,6 +61,8 @@ namespace sferes {
                 zones_cnt += run_simu(*ea.pop()[i], target);
 	  	}
 
+//	std::cout << "breakpoint simu" <<std::endl;
+
 	  int sum_zones = 0;
 
           for (float i = 0; i < 101; i+=1){
@@ -69,7 +71,7 @@ namespace sferes {
                 sum_zones += 1;
               }}
 
-	 
+//	  std::cout << "breakpoint sum zone" << std::endl;
           double novelty_score = sum_zones;
           double novelty_score_n = novelty_score /(100*100);
 
@@ -142,11 +144,11 @@ namespace sferes {
               else 
                   indx_Y = (y_int + 101)/2;
 
-
+//		std::cout << "index " << indx_X << " " << indx_Y << std::endl;
               work_zones_cnt(indx_X,indx_Y) ++;}
 
-
-	if (sqrt((target[0] - _traj[size][0])*(target[0] - _traj[size][0]) + (target[1] - _traj[size][1])*(target[1] - _traj[size][1])) < 0.05){
+	
+	if (sqrt((target[0] - _traj[size-1][0])*(target[0] - _traj[size-1][0]) + (target[1] - _traj[size-1][1])*(target[1] - _traj[size-1][1])) < 0.05){
 			std::cout << "task successful" << std::endl;
 			return work_zones_cnt;}
 	else{
