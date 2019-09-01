@@ -73,6 +73,17 @@
 #include "simu_fit_hexa_control_nn.hpp"
 #include "best_fit_nn.hpp"
 
+#include <dart/collision/bullet/BulletCollisionDetector.hpp>
+#include <dart/constraint/ConstraintSolver.hpp>
+
+#include <modules/nn2/mlp.hpp>
+#include <modules/nn2/gen_dnn.hpp>
+#include <modules/nn2/phen_dnn.hpp>
+
+#include <modules/nn2/gen_dnn_ff.hpp>
+
+#include "desc_hexa.hpp"
+
 using namespace sferes;
 using namespace sferes::gen::evo_float;
 using namespace sferes::gen::dnn;
@@ -142,7 +153,82 @@ void visualise_behaviour(Eigen::Vector3d& target, Model& model){
   fit.simulate(target, model);
 }
 
+std::vector<double> get_fit(std::vector<Eigen::VectorXf> & _traj, Eigen::Vector3d & target)
+  {
 
+    int size = _traj.size();
+
+
+    double dist = 0;
+    std::vector<double> zone_exp(3);
+    std::vector<double> res(3);
+    std::vector<double> results(4);
+
+    Eigen::VectorXf pos_init = _traj[0];
+    //std::cout << "init done" << std::endl;
+
+    for (int i = 0; i < size; i++)
+      {
+        if (sqrt((target[0]-_traj[i][0])*(target[0]-_traj[i][0]) + (target[1]-_traj[i][1])*(target[1]-_traj[i][1])) < 0.05){
+          dist -= sqrt((target[0]-_traj[i][0])*(target[0]-_traj[i][0]) + (target[1]-_traj[i][1])*(target[1]-_traj[i][1]));}
+
+        else {
+          dist -= (log(1+i)) + sqrt((target[0]-_traj[i][0])*(target[0]-_traj[i][0]) + (target[1]-_traj[i][1])*(target[1]-_traj[i][1]));}
+
+        zone_exp[0] = 0;
+        zone_exp[1] = 0;
+        zone_exp[2] = 0;
+      }
+
+    if (sqrt((target[0]-_traj.back()[0])*(target[0]-_traj.back()[0]) + (target[1]-_traj.back()[1])*(target[1]-_traj.back()[1])) < 0.05){
+          dist = 1.0 + dist/10000;} // -> 1 (TODO : check division by 500)
+
+    else {
+          dist = dist/10000; // -> 0
+        }
+
+    results[0] = dist;
+    results[1] = zone_exp[0];
+    results[2] = zone_exp[1];
+    results[3] = zone_exp[2];
+
+    return results;}
+
+template<typename Model>
+double simulate(Eigen::Vector3d& target, Model& model){
+
+    auto g_robot=global::global_robot->clone();
+    g_robot->skeleton()->setPosition(5, 0.15);
+
+
+    double ctrl_dt = 0.015;
+    g_robot->add_controller(std::make_shared<robot_dart::control::HexaControlNN<Model>>());
+    //std::static_pointer_cast<robot_dart::control::HexaControlNN<Model>>(g_robot->controllers()[0])->set_h_params(std::vector<double>(1, ctrl_dt));
+
+    std::static_pointer_cast<robot_dart::control::HexaControlNN<Model>>(g_robot->controllers()[0])->setModel(model); //TODO : understand why do we use a static pointer cast
+
+    std::static_pointer_cast<robot_dart::control::HexaControlNN<Model>>(g_robot->controllers()[0])->setTarget(target);
+
+    robot_dart::RobotDARTSimu simu(0.005); //creation d'une simulation
+
+    simu.world()->getConstraintSolver()->setCollisionDetector(dart::collision::BulletCollisionDetector::create());
+    simu.add_floor();
+    simu.add_robot(g_robot);
+
+    simu.add_descriptor(std::make_shared<robot_dart::descriptor::HexaDescriptor>(robot_dart::descriptor::HexaDescriptor(simu)));
+    simu.add_descriptor(std::make_shared<robot_dart::descriptor::DutyCycle>(robot_dart::descriptor::DutyCycle(simu)));
+
+    simu.run(5);
+
+    std::vector<Eigen::VectorXf> traj;
+    traj  = std::static_pointer_cast<robot_dart::descriptor::HexaDescriptor>(simu.descriptor(0))->traj;
+	
+    std::vector<double> result;
+
+    result = get_fit(traj, target);
+
+    g_robot.reset();
+    return result[0];}
 
 
 int main(int argc, char **argv) 
@@ -166,13 +252,14 @@ int main(int argc, char **argv)
 
     typedef phen::Dnn<gen_t, fit_t, Params> phen_t;
     
-	typedef boost::archive::binary_iarchive ia_t;
+    typedef boost::archive::binary_iarchive ia_t;
 
     phen_t model; 
 
     //Eigen::Vector3d target = {-0.211234, 0.59688,0.0};
     
-	Eigen::Vector3d target = {-0.49, 0.49 ,0.0};
+	//Eigen::Vector3d target = {-0.49, 0.49 ,0.0};
+	Eigen::Vector3d target;
     //Eigen::Vector3d target = {-1.0, 1.0 ,0.0};
     const std::string filename = "model_25000_0505.bin";
 
@@ -188,10 +275,47 @@ int main(int argc, char **argv)
     std::cout << "model developed" << std::endl;
     std::cout << "model initialized" << std::endl;
 
-	visualise_behaviour<fit_t>(target, model);
 
-	global::global_robot.reset();
+   std::string filename_in = "exp/samples_cart.txt";
+   std::string filename_out = "exp/fit_out.txt";
 
+   std::ofstream output_file; //no need for logfile, we don't care about the trajectory
+   std::ifstream input_file; 
+
+   input_file.open(filename_in);
+   output_file.open(filename_out);
+
+   if (!input_file) {
+          std::cout << "Unable to open file " << filename_in;
+          exit(1);   // call system to stop
+        }
+    if (!output_file) {
+          std::cout << "Unable to open file " << filename_out;
+          exit(1);   // call system to stop
+        }
+    
+    std::vector<double> fits;
+
+    for (int i = 0; i < 233; i ++){
+	
+
+	std::cout << "sample nb " << i << std::endl;
+
+	double out;
+      	input_file >> out;
+      	target[0] = out;
+      	input_file >> out;
+      	target[1] = out;
+      	target[2] = 0; 
+	
+	fits.push_back(simulate(target, model));}
+
+   for (int i = 0; i < fits.size(); i++){
+	output_file << fits[i] << "\n";
+	std::cout << "fitness "<< i << " = " << fits[i] << std::endl;}
+
+   input_file.close();
+   output_file.close();
 
     return 0;
 }

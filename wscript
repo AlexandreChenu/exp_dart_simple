@@ -70,3 +70,10 @@ def build(bld):
                 use = 'sferes2',
                 defines = ["GRAPHIC"],
                 target = 'test_model_dart_graphic')
+
+    bld.program(features = 'cxx',
+                source = 'test_model_dart_samp.cpp',
+                includes = '. ../../',
+                uselib = 'ROBOTDART TBB BOOST EIGEN PTHREAD MPI DART ROBOT_DART',
+                use = 'sferes2',
+                target = 'test_model_dart_samp')
