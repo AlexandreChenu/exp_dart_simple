@@ -59,7 +59,7 @@ namespace sferes {
 
           for (int i = 0; i < ea.pop().size(); ++i){
                 zones_cnt += run_simu(*ea.pop()[i], target);
-                }
+	  	}
 
 	  int sum_zones = 0;
 
@@ -68,13 +68,11 @@ namespace sferes {
               if (zones_cnt(i,j) != 0)
                 sum_zones += 1;
               }}
+
 	 
           double novelty_score = sum_zones;
           double novelty_score_n = novelty_score /(100*100);
 
-	  std::cout << "novelty score is: " << novelty_score << std::endl;
-
-          std::cout << "normalized novelty score is: " << novelty_score_n <<  std::endl;
 
           _nov_scores.push_back(novelty_score);
 	  }
@@ -143,10 +141,12 @@ namespace sferes {
               
               else 
                   indx_Y = (y_int + 101)/2;
-          
+
+
               work_zones_cnt(indx_X,indx_Y) ++;}
 
-	if (sqrt((target[0] - _traj[-1][0])*(target[0] - _traj[-1][0]) + (target[1] - _traj[-1][1])*(target[1] - _traj[-1][1]) < 0.05){
+
+	if (sqrt((target[0] - _traj[size][0])*(target[0] - _traj[size][0]) + (target[1] - _traj[size][1])*(target[1] - _traj[size][1])) < 0.05){
 			std::cout << "task successful" << std::endl;
 			return work_zones_cnt;}
 	else{

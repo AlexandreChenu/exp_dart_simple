@@ -155,7 +155,7 @@ struct Params {
 
 int main(int argc, char **argv) 
 {   
-    tbb::task_scheduler_init init(20);
+    tbb::task_scheduler_init init(48);
 
     load_and_init_robot();
 
@@ -187,6 +187,7 @@ int main(int argc, char **argv)
 //#endif
     
     typedef eval::Parallel<Params> eval_t;
+//    typedef eval::Eval<Params> eval_t;
 
     typedef boost::fusion::vector<
         stat::BestFitNov<phen_t, Params>, 
