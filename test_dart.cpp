@@ -67,7 +67,9 @@
 //#include "gen_mlp.hpp"
 #include "gen_mlp_3_lay.hpp"
 #include "fit_hexa_control_nn.hpp"
-#include "best_fit_nn.hpp"
+//#include "best_fit_nn.hpp"
+#include "best_fit_nov.hpp"
+
 
 using namespace sferes;
 using namespace sferes::gen::evo_float;
@@ -153,7 +155,7 @@ struct Params {
 
 int main(int argc, char **argv) 
 {   
-    tbb::task_scheduler_init init(32);
+    tbb::task_scheduler_init init(20);
 
     load_and_init_robot();
 
@@ -187,7 +189,7 @@ int main(int argc, char **argv)
     typedef eval::Parallel<Params> eval_t;
 
     typedef boost::fusion::vector<
-        stat::BestFitNN<phen_t, Params>, 
+        stat::BestFitNov<phen_t, Params>, 
         stat::QdContainer<phen_t, Params>, 
         stat::QdProgress<phen_t, Params>, 
         stat::QdSelection<phen_t, Params>>
