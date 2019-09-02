@@ -85,7 +85,7 @@ namespace sferes {
 
           std::cout << "Saving novelty scores" << std::endl;
 
-          std::string filename_out = ea.res_dir() + "novelty_gte.txt"; //file containing samples
+          std::string filename_out = ea.res_dir() + "/novelty_gte.txt"; //file containing samples
           //std::string filename_out = "/git/sferes2/results_signb_nov/novelty_gte.txt";
           std::ofstream out_file; 
           out_file.open(filename_out);
