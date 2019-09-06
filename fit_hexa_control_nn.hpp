@@ -58,7 +58,7 @@ public:
   {
     //INITIALISATION
     Eigen::Vector3d target;
-    //target = {8.0, 0.0,0.0}; 
+
     _body_contact = false;
     _on_back = false;
     double _arrival_angle = 0;
@@ -102,7 +102,6 @@ public:
 
     double ctrl_dt = 0.015;
     g_robot->add_controller(std::make_shared<robot_dart::control::HexaControlNN<Model>>());
-    //std::static_pointer_cast<robot_dart::control::HexaControlNN<Model>>(g_robot->controllers()[0])->set_h_params(std::vector<double>(1, ctrl_dt));
 
     std::static_pointer_cast<robot_dart::control::HexaControlNN<Model>>(g_robot->controllers()[0])->setModel(model); //TODO : understand why do we use a static pointer cast
 
@@ -148,43 +147,32 @@ public:
     for (int i = 0; i < size; i++)
       {	
 
-	//std::cout << "traj " << i << " : " << _traj[i][0] << " - " << _traj[i][1] << std::endl;
-        //std::cout << "fit" << std::endl;
         if (sqrt((target[0]-_traj[i][0])*(target[0]-_traj[i][0]) + (target[1]-_traj[i][1])*(target[1]-_traj[i][1])) < 0.02){
           dist -= sqrt((target[0]-_traj[i][0])*(target[0]-_traj[i][0]) + (target[1]-_traj[i][1])*(target[1]-_traj[i][1]));}
 
         else {
           dist -= (log(1+i)) + sqrt((target[0]-_traj[i][0])*(target[0]-_traj[i][0]) + (target[1]-_traj[i][1])*(target[1]-_traj[i][1]));}
         
-	//std::cout << "bd" << std::endl;
         res = get_zone(pos_init, target, traj[i]); //TODO : check if get zone accepts vector with different sizes
         zone_exp[0] = zone_exp[0] + res[0];
         zone_exp[1] = zone_exp[1] + res[1];
         zone_exp[2] = zone_exp[2] + res[2];
       }
     
-    //std::cout << "fit 1" << std::endl;
     if (sqrt((target[0]-_traj.back()[0])*(target[0]-_traj.back()[0]) + (target[1]-_traj.back()[1])*(target[1]-_traj.back()[1])) < 0.05){
           dist = 1.0 + dist/10000;} // -> 1 (TODO : check division by 500)
 
     else {
           dist = dist/10000; // -> 0
         }
-    //std::cout << "fit 2" << std::endl;
 
-
-    //int sum_zones = abs(zone_exp[0]) + abs(zone_exp[1]) + abs(zone_exp[2]);
     int sum_zones = size; //always the same number of time steps
-	  
-    //std::cout << "sum results: " << sum_zones << std::endl;
 
     results[0] = dist;
     results[1] = zone_exp[0]/sum_zones;
     results[2] = zone_exp[1]/sum_zones;
     results[3] = zone_exp[2]/sum_zones;
 	  
-    //std::cout << "final results: " << results[0] << " - " << results[1] << " - " << results[2] << " - " << results[3] << std::endl;
-
     return results;
   }
 
@@ -200,21 +188,15 @@ public:
       
       std::vector<double> distances (3);
       distances = {0,0,0};
-      
-//std::cout << "get zone 1" << std::endl;
 
       distances[0] = sqrt((start[0] - pos[0])*(start[0] - pos[0]) + (start[1] - pos[1])*(start[1] - pos[1]));
-
       distances[1] = sqrt((target[0] - pos[0])*(target[0] - pos[0]) + (target[1] - pos[1])*(target[1] - pos[1]));
-
       distances[2] = sqrt((middle[0] - start[0])*(middle[0] - start[0]) + (middle[1] - start[1])*(middle[1] - start[1])); 
 
       
       Eigen::Vector3d vO2_M_R0; //vector 02M in frame R0; (cf sketch on page 4)
       vO2_M_R0[0] = pos[0] - start[0];
-      //vO2_M_R0[0] = pos[0];
       vO2_M_R0[1] = pos[1] - start[1];
-      //vO2_M_R0[1] = pos[1];
       vO2_M_R0[2] = 1;
 	  
       Eigen::Vector3d vMid_M_R0; //vector Middle_M in frame R0;
@@ -222,9 +204,7 @@ public:
       vMid_M_R0[1] = pos[1] - middle[1];
       vMid_M_R0[2] = 1;
       
-      //Eigen::Matrix3d T; //translation matrix
-      //T << 1,0,-start[0],0,1,-start[1],0,0,1; //translation matrix
-      
+ 
       Eigen::Vector3d vO2_T;
       vO2_T[0] = target[0] - start[0];
       vO2_T[1] = target[1] - start[1];
