@@ -1,7 +1,6 @@
 #ifndef ROBOT_DART_CONTROL_HEXA_CONTROL_NN
 #define ROBOT_DART_CONTROL_HEXA_CONTROL_NN
 
-//#include <hexapod_controller/hexapod_controller_simple.hpp>
 #include "hexapod_controller_simple.hpp"
 #include "policy_control.hpp"
 
@@ -19,7 +18,7 @@ namespace robot_dart {
         public:
             void set_params(const std::vector<double>& ctrl)
             {
-                //_controller.set_parameters(ctrl);
+	    
             }
 
             size_t output_size() const { return 18; }
@@ -32,8 +31,6 @@ namespace robot_dart {
                 auto angles = get_angles(robot, t);
 		
 		Eigen::VectorXd target_positions = Eigen::VectorXd::Zero(18 + 6);
-		//for (size_t i = 0; i < angles.size(); i++)
-		//	target_positions(i+6) = angles[i];
 
 		for(size_t i = 0; i < angles.size(); i+=3){
 
@@ -77,9 +74,8 @@ namespace robot_dart {
             {
 		 double p_max = 1.0;
                 int n_Dof = 12;
-                //Eigen::VectorXd commands = Eigen::VectorXd::Zero(18);
 
-                std::vector<float> inputs(2 + n_Dof + 3 + 1); //HOW MANY ENTRIES?
+                std::vector<float> inputs(2 + n_Dof + 3 + 1); //nb of inputs correspond to NN inputs
 
                 //auto pos?
                 auto pos= robot->skeleton()->getPositions().head(6).tail(3).cast <float> (); //obtain robot's position
@@ -94,12 +90,12 @@ namespace robot_dart {
                 std::vector<double> prev_commands;
                 for (int i = 1; i < 19; i++){ 
                     if (i % 3 != 0 ){
-                        prev_commands.push_back(prev_commands_full[5 + i]);} //we don't consider dof 3 TODO : check order of commands 
+                        prev_commands.push_back(prev_commands_full[5 + i]);} 
                 }
 		  
 
                 for (int i = 0; i < n_Dof ; i++){
-                    inputs[2 + i] = prev_commands[i]; //TODO : get current angles
+                    inputs[2 + i] = prev_commands[i]; 
                 }
 
                 //auto angles? 
@@ -107,13 +103,12 @@ namespace robot_dart {
 		
                 for (int i = 0; i < 3 ; i++){
                     inputs[2 + n_Dof + i] = angles[i]; // yaw / pitch / roll
-		    //std::cout << "input "<< i << ": "<<inputs[i] << std::endl;
                 }
 
 		inputs[2 + n_Dof + 3] = std::fmod(t,1);
 
                 _model.gen().init();
-                //for (int j = 0; j < _model.gen().get_depth() + 1; ++j)
+
 		for (int j = 0; j < 10 + 1; ++j)
                     _model.gen().step(inputs); 
 
@@ -134,20 +129,12 @@ namespace robot_dart {
                         }
                     }
 		
-		//for (int i = 0; i< 18; i++) 
-		//	std::cout << "command " << i << ": " << commands_out[i] << std::endl;
-
-                //std::cout << "test unitaire - size de la commande en sortie format std vector(=18?) : " << commands_out.size() << std::endl;
-		
-                //Eigen::VectorXd commands(commands_out.data());
-                //std::cout << "test unitaire - size de la commande en sortie format eigen vector (=18?) : " << commands.size() << std::endl;
-                
                 return commands_out;}
 
             
 
         protected:
-            //hexapod_controller::HexapodControllerSimple _controller;
+
             double _dt;
             bool _h_params_set = false;
             Indiv _model; 
