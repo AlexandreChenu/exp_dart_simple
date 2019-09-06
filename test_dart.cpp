@@ -1,39 +1,4 @@
-//| This file is a part of the sferes2 framework.
-//| Copyright 2016, ISIR / Universite Pierre et Marie Curie (UPMC)
-//| Main contributor(s): Jean-Baptiste Mouret, mouret@isir.fr
-//|
-//| This software is a computer program whose purpose is to facilitate
-//| experiments in evolutionary computation and evolutionary robotics.
-//|
-//| This software is governed by the CeCILL license under French law
-//| and abiding by the rules of distribution of free software.  You
-//| can use, modify and/ or redistribute the software under the terms
-//| of the CeCILL license as circulated by CEA, CNRS and INRIA at the
-//| following URL "http://www.cecill.info".
-//|
-//| As a counterpart to the access to the source code and rights to
-//| copy, modify and redistribute granted by the license, users are
-//| provided only with a limited warranty and the software's author,
-//| the holder of the economic rights, and the successive licensors
-//| have only limited liability.
-//|
-//| In this respect, the user's attention is drawn to the risks
-//| associated with loading, using, modifying and/or developing or
-//| reproducing the software by the user in light of its specific
-//| status of free software, that may mean that it is complicated to
-//| manipulate, and that also therefore means that it is reserved for
-//| developers and experienced professionals having in-depth computer
-//| knowledge. Users are therefore encouraged to load and test the
-//| software's suitability as regards their requirements in conditions
-//| enabling the security of their systems and/or data to be ensured
-//| and, more generally, to use and operate it in the same conditions
-//| as regards security.
-//|
-//| The fact that you are presently reading this means that you have
-//| had knowledge of the CeCILL license and that you accept its terms.
-
 #include <iostream>
-
 #include <sferes/eval/parallel.hpp>
 #include <sferes/gen/evo_float.hpp>
 #include <sferes/modif/dummy.hpp>
@@ -57,17 +22,15 @@
 #include <modules/nn2/phen_dnn.hpp>
 #include <modules/nn2/gen_dnn_ff.hpp>
 
-#include "gen_dte.hpp" 
+
 
 #include <cmath>
 #include <algorithm>
 
 #include <cstdlib>
 
-//#include "gen_mlp.hpp"
-#include "gen_mlp_3_lay.hpp"
-#include "fit_hexa_control_nn.hpp"
-//#include "best_fit_nn.hpp"
+
+#include "fit_hexa_control_nn.hpp" 
 #include "best_fit_nov.hpp"
 
 
@@ -114,7 +77,7 @@ struct Params {
         SFERES_CONST init_t init = ff;
     };
     
-    struct mlp {
+    struct mlp { //parameters only useful if we use gen_mlp
         SFERES_CONST size_t layer_0_size = 12;
         SFERES_CONST size_t layer_1_size = 18;
     	SFERES_CONST size_t layer_2_size = 12;
@@ -140,18 +103,6 @@ struct Params {
     };
 };
 
-//template<typename fit_t>
-//void visualise_behaviour(int argc, char **argv){
-    //std::cout << "yo" << std::endl;
-//  std::vector<double> ctrl;
-//  for (int i = 1; i < 37; i++) // total number of parameter = 36
-//    ctrl.push_back(atof(argv[i]));
-//  fit_t fit;
-//  fit.simulate(ctrl);
-//}
-
-//TODO: changer le visualise behaviour pour pouvoir visualiser le comportement du réseau de neurones
-
 
 int main(int argc, char **argv) 
 {   
@@ -165,7 +116,6 @@ int main(int argc, char **argv)
 
     typedef Fit_hexa_control_nn<Params> fit_t;
 
-    // typedef gen::EvoFloat<36, Params> gen_t;
     typedef phen::Parameters<gen::EvoFloat<1, Params>, fit::FitDummy<>, Params> weight_t;
 
     typedef PfWSum<weight_t> pf_t;
@@ -180,14 +130,8 @@ int main(int argc, char **argv)
     typedef qd::container::SortBasedStorage< boost::shared_ptr<phen_t> > storage_t; 
     typedef qd::container::Archive<phen_t, storage_t, Params> container_t; 
 
-//#ifdef GRAPHIC
-//    typedef eval::Eval<Params> eval_t;
-//#else
-//    typedef eval::Parallel<Params> eval_t;
-//#endif
-    
     typedef eval::Parallel<Params> eval_t;
-//    typedef eval::Eval<Params> eval_t;
+
 
     typedef boost::fusion::vector<
         stat::BestFitNov<phen_t, Params>, 
@@ -198,13 +142,6 @@ int main(int argc, char **argv)
 
     typedef modif::Dummy<> modifier_t;
     typedef qd::QualityDiversity<phen_t, eval_t, stat_t, modifier_t, select_t, container_t, Params> qd_t;
-
-    //if(argc==37)
-    //  {
-	//visualise_behaviour<fit_t>(argc, argv);
-	//global::global_robot.reset();
-	//return 0;
-      //}
 
     qd_t qd;
     run_ea(argc, argv, qd); 
