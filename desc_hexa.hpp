@@ -10,8 +10,9 @@ namespace robot_dart {
     class Robot;
 
     namespace descriptor {
-
-      struct HexaDescriptor:public BaseDescriptor{
+	
+//HexaDescriptor allows access to robots positions and angles
+      struct HexaDescriptor:public BaseDescriptor{ 
         public:
 	HexaDescriptor(RobotDARTSimu& simu, size_t desc_dump = 1):BaseDescriptor(simu,desc_dump),_on_back(false)
 	{}
@@ -27,13 +28,10 @@ namespace robot_dart {
 	}
 	
 	bool on_back(){return _on_back;} 
-		 
-
+		
 	private :
-		bool _on_back;
-	  //std::cout<<pos.head(2).transpose()<<std::endl;
-	  //if( traj.back()[0] > 1 || traj.back()[1] > 1 || traj.back()[0] < -1 || traj.back()[1] < -1 )
-	  //std::cout<<"ERROR "<<traj.back().transpose()<<std::endl;
+		bool _on_back; //true if robot is on its back
+	      
       }; //struct HexaDescriptor
 
      struct DutyCycle:public BaseDescriptor{
@@ -43,20 +41,8 @@ namespace robot_dart {
 
 	virtual void operator()()
 	{
-	const dart::collision::CollisionResult& col_res = _simu.world()->getLastCollisionResult();
-	  //const std::unordered_set< const dart::dynamics::BodyNode * > colliding_nodes = col_res.getCollidingBodyNodes ();
-	  //const std::unordered_set< const dart::dynamics::ShapeFrame * > colliding_frames = col_res.getCollidingShapeFrames ();	  
-	_body_contact = false;  
- 	
-	//std::cout << "nodes : " << std::endl;
-
-	//  for (const auto& elem: colliding_nodes) {
-    	//	std::cout << elem->getName() << std::endl;
-	//	}
-	//std::cout << "shapes : " << std::endl;
-
-        //  for (const auto& elem: colliding_frames) {
-	//	std::cout << elem->getName() << std::endl;}	  
+	const dart::collision::CollisionResult& col_res = _simu.world()->getLastCollisionResult();	  
+	_body_contact = false;    
  
    	  dart::dynamics::BodyNodePtr part_to_check = _simu.robots().back()->skeleton()->getBodyNode("base_link");
 
@@ -66,19 +52,13 @@ namespace robot_dart {
 	      }
 	  if (_body_contact)
 		_collision = true;
-		
-//	  if (_body_contact){
-//	  	std::cout << "collision" << std::endl;}
-//
-//	  else {
-//		std::cout << "no collision" << std::endl;}
 	  
 	} //void operator
 
 	bool body_contact(){return _collision;}
 
       protected:
-	bool _body_contact;
+	bool _body_contact; //assess if robot body suffers collision
 	bool _collision = false;	
       };//struct dutycycle
 
