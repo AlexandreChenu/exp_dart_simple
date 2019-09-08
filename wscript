@@ -28,20 +28,6 @@ def configure(conf):
 def build(bld):
 
     bld.program(features = 'cxx',
-                source = 'dart_exp.cpp',
-                includes = '. ../../',
-                uselib = 'ROBOTDART TBB BOOST EIGEN PTHREAD MPI DART ROBOT_DART',
-                use = 'sferes2',
-                target = 'example')
-    bld.program(features = 'cxx',
-                source = 'dart_exp.cpp',
-                includes = '. ../../',
-                uselib = 'ROBOTDART TBB BOOST EIGEN PTHREAD MPI DART ROBOT_DART DART_GRAPHIC',
-                use = 'sferes2',
-                defines = ["GRAPHIC"],
-                target = 'example_graphic')
-
-    bld.program(features = 'cxx',
                 source = 'test_dart.cpp',
                 includes = '. ../../',
                 uselib = 'ROBOTDART TBB BOOST EIGEN PTHREAD MPI DART ROBOT_DART',
