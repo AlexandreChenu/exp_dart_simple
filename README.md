@@ -26,7 +26,7 @@ models/ contains several evolved Neural Network based controllers.
 1. Clone the repository.
 
 ```
-https://github.com/AlexandreChenu/exp_dart_simple.git
+git clone https://github.com/AlexandreChenu/exp_dart_simple.git
 ```
 
 2. Move to singularity repository.
