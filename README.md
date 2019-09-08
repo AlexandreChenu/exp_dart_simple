@@ -81,9 +81,13 @@ Here is a quick summary of all the main files contained in this repository.
 
 * wscript - waf script for compilation
 * test_dart - main file for running Quality-Diversity algorithm (contains includes, parameters, template-type declaration..)
-* best_fit - redefinition of bestfit.hpp from sferes::dart 
+* best_fit_nn - redefinition of bestfit.hpp from sferes::dart (saves the best model contained in the archive)
+* best_fit_all - redefinition of bestfit.hpp from sferes::dart (saves all the model contained in the archive at the end of the evolution)
+* best_fit_nov - redefinition of bestfit.hpp from sferes::dart (saves the novelty score of the archive)
 * fit_hexa_control_nn - definition of the evaluation step
 * hexa_control.hpp/hexa_controller_simple.hpp/policy_control - redefinition of DART library files to include NN2 neural-networks
+* desc_hexa - descriptor file for interacting with the robot during the learning process
+* gen_mlp - definition of a new Feed-Forward Neural Network genotype
 * test_model_dart - testing file for visualizing the hexapod
 
 ## Contributors
